@@ -1,0 +1,37 @@
+{
+  "name": "bytic/report-generator",
+  "type": "library",
+  "description": "report generator library",
+  "keywords": [
+    "facebook",
+    "pixel"
+  ],
+  "homepage": "https://github.com/bytic/report-generator",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gabriel Solomon",
+      "email": "hello@gabrielsolomon.ro"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "ByTIC\\ReportGenerator\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ByTIC\\ReportGenerator\\Tests\\": "tests/src",
+      "ByTIC\\ReportGenerator\\Tests\\Fixtures\\": "tests/fixtures"
+    }
+  },
+  "require": {
+    "php": ">=7.0",
+    "phpoffice/phpspreadsheet": "^1.4"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.0",
+    "phpunit/phpunit": "^7.2",
+    "mockery/mockery": "^1.1"
+  }
+}
