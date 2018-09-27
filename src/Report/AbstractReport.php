@@ -3,6 +3,7 @@
 namespace ByTIC\ReportGenerator\Report;
 
 use ByTIC\ReportGenerator\Report\Traits\HasDefinitionTrait;
+use ByTIC\ReportGenerator\Report\Traits\HasWritersTrait;
 
 /**
  * Class ReportAbstract
@@ -11,6 +12,7 @@ use ByTIC\ReportGenerator\Report\Traits\HasDefinitionTrait;
 abstract class AbstractReport
 {
     use HasDefinitionTrait;
+    use HasWritersTrait;
 
     public function __construct()
     {
@@ -18,13 +20,13 @@ abstract class AbstractReport
         $this->define();
     }
 
+    public function render()
+    {
+        $this->getWriter()->render();
+    }
+
     /**
      * Method for setting up the report definition.
      */
     abstract protected function define();
-
-    protected function render()
-    {
-
-    }
 }
