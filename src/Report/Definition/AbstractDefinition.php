@@ -16,6 +16,13 @@ abstract class AbstractDefinition
     protected $title;
 
     /**
+     * The file name
+     *
+     * @var string
+     */
+    protected $fileName;
+
+    /**
      * @param string $title
      * @return $this
      */
@@ -31,5 +38,21 @@ abstract class AbstractDefinition
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * @param string $fileName
+     */
+    public function setFileName($fileName)
+    {
+        $this->fileName = $fileName;
     }
 }

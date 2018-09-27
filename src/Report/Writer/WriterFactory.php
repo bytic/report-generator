@@ -3,6 +3,7 @@
 namespace ByTIC\ReportGenerator\Report\Writer;
 
 use ByTIC\ReportGenerator\Report\ReportInterface;
+use ByTIC\ReportGenerator\Report\Traits\HasWritersTrait;
 
 /**
  * Class WriterFactory
@@ -11,7 +12,7 @@ use ByTIC\ReportGenerator\Report\ReportInterface;
 class WriterFactory
 {
     /**
-     * @param ReportInterface $report
+     * @param ReportInterface|HasWritersTrait $report
      * @param string $type
      * @return AbstractWriter
      */

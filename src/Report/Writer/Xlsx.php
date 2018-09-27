@@ -4,6 +4,9 @@ namespace ByTIC\ReportGenerator\Report\Writer;
 
 use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetWriterFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\IWriter;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Class Xlsx
@@ -12,9 +15,15 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Xlsx extends AbstractWriter implements WriterInterface
 {
     /**
+     * @var IWriter
+     */
+    protected $writer = null;
+
+    /**
      * @var Spreadsheet
      */
-    protected $spreadsheet;
+    protected $spreadsheet = null;
+
     /**
      * Current row number in report.
      *
@@ -30,8 +39,30 @@ class Xlsx extends AbstractWriter implements WriterInterface
      */
     public function save($name)
     {
-        $writer = SpreadsheetWriterFactory::createWriter($this->getSpreadsheet(), 'Xlsx');
+        $writer = $this->getWriter();
         $writer->save($name);
+    }
+
+    /**
+     * @return null|IWriter
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    protected function getWriter()
+    {
+        if ($this->writer === null) {
+            $this->initWriter();
+        }
+        return $this->writer;
+    }
+
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    protected function initWriter()
+    {
+        $this->writer = SpreadsheetWriterFactory::createWriter($this->getSpreadsheet(), 'Xlsx');
     }
 
     /**
@@ -42,7 +73,7 @@ class Xlsx extends AbstractWriter implements WriterInterface
      */
     protected function getSpreadsheet()
     {
-        if (!$this->spreadsheet) {
+        if (!$this->writer) {
             $spreadsheet = new Spreadsheet();
 
             $spreadsheet->getProperties()
@@ -61,9 +92,9 @@ class Xlsx extends AbstractWriter implements WriterInterface
             foreach (range('A', $lastCol) as $col) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
             }
-            $this->spreadsheet = $spreadsheet;
+            $this->writer = $spreadsheet;
         }
-        return $this->spreadsheet;
+        return $this->writer;
     }
 
     /**
@@ -85,5 +116,25 @@ class Xlsx extends AbstractWriter implements WriterInterface
         }
         $this->currentRow++;
         return $this;
+    }
+
+    /**
+     * @param Response $response
+     * @return void
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    protected function generateResponseContent($response)
+    {
+        $writer = $this->getWriter();
+
+        $response = new StreamedResponse(function () use ($writer) {
+            $writer->save('php://output');
+        });
+        $response->headers->set(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8'
+        );
+        $response->headers->set('Pragma', 'public');
     }
 }

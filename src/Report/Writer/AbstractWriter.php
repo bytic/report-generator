@@ -3,6 +3,7 @@
 namespace ByTIC\ReportGenerator\Report\Writer;
 
 use ByTIC\ReportGenerator\Report\ReportInterface;
+use ByTIC\ReportGenerator\Report\Writer\Traits\CanRenderTrait;
 
 /**
  * Class AbstractWriter
@@ -10,6 +11,7 @@ use ByTIC\ReportGenerator\Report\ReportInterface;
  */
 abstract class AbstractWriter
 {
+    use CanRenderTrait;
     /**
      * @var ReportInterface
      */
@@ -31,4 +33,20 @@ abstract class AbstractWriter
      * @param string $name
      */
     abstract public function save($name);
+
+    /**
+     * @return ReportInterface
+     */
+    public function getReport()
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param ReportInterface $report
+     */
+    public function setReport($report)
+    {
+        $this->report = $report;
+    }
 }

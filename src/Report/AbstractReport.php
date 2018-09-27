@@ -22,4 +22,9 @@ abstract class AbstractReport
      * Method for setting up the report definition.
      */
     abstract protected function define();
+
+    protected function render()
+    {
+
+    }
 }
