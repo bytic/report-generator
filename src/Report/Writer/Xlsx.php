@@ -89,6 +89,7 @@ class Xlsx extends AbstractWriter implements WriterInterface
 
             $lastCol = $spreadsheet->getActiveSheet()->getHighestColumn();
             $spreadsheet->getActiveSheet()->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);
+            $spreadsheet->getActiveSheet()->freezePane('A2');
 
             foreach (range('A', $lastCol) as $col) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
