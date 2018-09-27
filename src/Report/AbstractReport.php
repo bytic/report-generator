@@ -8,18 +8,18 @@ use ByTIC\ReportGenerator\Report\Traits\HasDefinitionTrait;
  * Class ReportAbstract
  * @package ByTIC\ReportGenerator\Report
  */
-class ReportAbstract
+abstract class AbstractReport
 {
     use HasDefinitionTrait;
 
-    /**
-     * ReportAbstract constructor.
-     *
-     * @param array $options
-     */
-    public function __construct(array $options = [])
+    public function __construct()
     {
         $this->initDefinition();
         $this->define();
     }
+
+    /**
+     * Method for setting up the report definition.
+     */
+    abstract protected function define();
 }
