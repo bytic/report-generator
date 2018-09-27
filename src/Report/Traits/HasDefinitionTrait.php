@@ -17,6 +17,7 @@ trait HasDefinitionTrait
      * @var AbstractDefinition
      */
     protected $definition = null;
+    protected $defined = false;
 
     /**
      * @return AbstractDefinition
@@ -56,4 +57,34 @@ trait HasDefinitionTrait
         }
         return Definition::class;
     }
+
+    protected function validateDefinition()
+    {
+        if ($this->isDefined()) {
+            return;
+        }
+        $this->define();
+        $this->setDefined(true);
+    }
+
+    /**
+     * @param bool $defined
+     */
+    public function setDefined(bool $defined)
+    {
+        $this->defined = $defined;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefined(): bool
+    {
+        return $this->defined;
+    }
+
+    /**
+     * Method for setting up the report definition.
+     */
+    abstract protected function define();
 }

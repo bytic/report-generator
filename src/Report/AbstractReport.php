@@ -19,14 +19,25 @@ abstract class AbstractReport
     use HasParamsTrait;
 
     /**
+     * @var bool
+     */
+    protected $ready = false;
+
+    /**
      * AbstractReport constructor.
      * @param array $params
      */
     public function __construct($params = [])
     {
         $this->setParams($params);
-        $this->initDefinition();
-        $this->define();
+    }
+
+    public function run()
+    {
+        if ($this->isReady()) {
+            return;
+        }
+        $this->validateDefinition();
     }
 
     public function render()
@@ -35,7 +46,18 @@ abstract class AbstractReport
     }
 
     /**
-     * Method for setting up the report definition.
+     * @return bool
      */
-    abstract protected function define();
+    public function isReady(): bool
+    {
+        return $this->ready;
+    }
+
+    /**
+     * @param bool $ready
+     */
+    public function setReady(bool $ready)
+    {
+        $this->ready = $ready;
+    }
 }
