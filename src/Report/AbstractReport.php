@@ -2,6 +2,7 @@
 
 namespace ByTIC\ReportGenerator\Report;
 
+use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use ByTIC\ReportGenerator\Report\Traits\HasDataProvider;
 use ByTIC\ReportGenerator\Report\Traits\HasDefinitionTrait;
 use ByTIC\ReportGenerator\Report\Traits\HasWritersTrait;
@@ -43,6 +44,17 @@ abstract class AbstractReport
     public function render()
     {
         $this->getWriter()->render();
+    }
+
+    /**
+     * Get the resulting column display names after running report.
+     *
+     * @return Column[]
+     */
+    public function getHeader()
+    {
+        $this->run();
+        return $this->getDefinition()->getColumns();
     }
 
     /**

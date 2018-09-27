@@ -3,6 +3,7 @@
 namespace ByTIC\ReportGenerator\Report;
 
 use ByTIC\ReportGenerator\Report\Definition\AbstractDefinition as Definition;
+use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 
 /**
  * Interface ReportInterface
@@ -14,4 +15,9 @@ interface ReportInterface
      * @return Definition
      */
     public function getDefinition();
+
+    /**
+     * @return Column[]
+     */
+    public function getHeader();
 }

@@ -2,6 +2,7 @@
 
 namespace ByTIC\ReportGenerator\Report\Definition;
 
+use ByTIC\ReportGenerator\Report\Definition\Traits\HasColumnsTrait;
 use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 
 /**
@@ -11,6 +12,7 @@ use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 abstract class AbstractDefinition
 {
     use HasParamsTrait;
+    use HasColumnsTrait;
 
     /**
      * The report title.

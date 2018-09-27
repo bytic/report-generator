@@ -2,6 +2,7 @@
 
 namespace ByTIC\ReportGenerator\Report\Writer;
 
+use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetWriterFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
@@ -79,7 +80,7 @@ class Xlsx extends AbstractWriter implements WriterInterface
                 ->setTitle($this->report->getDefinition()->getTitle())
                 ->setSubject($this->report->getDefinition()->getTitle());
 
-//            $this->addRow($spreadsheet, $this->report->getColumnDisplayNames());
+            $this->addHeader($spreadsheet, $this->report->getHeader());
 //
 //            foreach ($this->report->getAllRows() as $rowData) {
 //                $this->addRow($spreadsheet, $rowData);
@@ -94,6 +95,27 @@ class Xlsx extends AbstractWriter implements WriterInterface
             $this->writer = $spreadsheet;
         }
         return $this->writer;
+    }
+
+    /**
+     * Add a row of values to the current worksheet.
+     *
+     * @param Spreadsheet $spreadsheet
+     * @param Column[] $header
+     *
+     * @return $this
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    protected function addHeader(Spreadsheet $spreadsheet, array $header)
+    {
+        $sheet = $spreadsheet->getActiveSheet();
+        $col = 'A';
+        foreach ($header as $column) {
+            $sheet->setCellValue($col . $this->currentRow, $column->getTitle());
+            $col++;
+        }
+        $this->currentRow++;
+        return $this;
     }
 
     /**

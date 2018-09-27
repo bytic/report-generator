@@ -23,7 +23,9 @@ trait HasParamsTrait
      */
     public function setParams($params)
     {
-        $this->params = $params;
+        foreach ($params as $name => $value) {
+            $this->setParam($name, $value);
+        }
     }
 
     /**
@@ -56,7 +58,7 @@ trait HasParamsTrait
      */
     protected function setParamMethod($name, $value)
     {
-        $method = $this->generateGetParamMethod($name);
+        $method = $this->generateSetParamMethod($name);
         if (method_exists($this, $method)) {
             $this->$method($value);
         }
