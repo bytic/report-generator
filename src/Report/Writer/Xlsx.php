@@ -80,11 +80,11 @@ class Xlsx extends AbstractWriter implements WriterInterface
                 ->setTitle($this->report->getDefinition()->getTitle())
                 ->setSubject($this->report->getDefinition()->getTitle());
 
-            $this->addRow($spreadsheet, $this->report->getColumnDisplayNames());
-
-            foreach ($this->report->getAllRows() as $rowData) {
-                $this->addRow($spreadsheet, $rowData);
-            }
+//            $this->addRow($spreadsheet, $this->report->getColumnDisplayNames());
+//
+//            foreach ($this->report->getAllRows() as $rowData) {
+//                $this->addRow($spreadsheet, $rowData);
+//            }
 
             $lastCol = $spreadsheet->getActiveSheet()->getHighestColumn();
             $spreadsheet->getActiveSheet()->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);

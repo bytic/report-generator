@@ -2,6 +2,7 @@
 
 namespace ByTIC\ReportGenerator\Report;
 
+use ByTIC\ReportGenerator\Report\Traits\HasDataProvider;
 use ByTIC\ReportGenerator\Report\Traits\HasDefinitionTrait;
 use ByTIC\ReportGenerator\Report\Traits\HasWritersTrait;
 
@@ -13,6 +14,7 @@ abstract class AbstractReport
 {
     use HasDefinitionTrait;
     use HasWritersTrait;
+    use HasDataProvider;
 
     public function __construct()
     {

@@ -36,7 +36,8 @@ trait HasWritersTrait
      */
     protected function initWriter($type = null)
     {
-        $this->type = $this->generateWriter($type);
+        $type = $this->checkWriterType($type);
+        $this->writers[$type] = $this->generateWriter($type);
     }
 
     /**
