@@ -24,7 +24,9 @@ trait HasParamsTrait
     public function setParams($params)
     {
         foreach ($params as $name => $value) {
-            $this->setParam($name, $value);
+            if ($value) {
+                $this->setParam($name, $value);
+            }
         }
     }
 
