@@ -61,6 +61,9 @@ class Column
      */
     public function getTitle(): string
     {
+        if (empty($this->title)) {
+            return $this->getName();
+        }
         return $this->title;
     }
 

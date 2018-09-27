@@ -44,6 +44,29 @@ trait HasColumnsTrait
     /**
      * Add a column.
      *
+     * @param string $name
+     * @param string|null $title
+     * @return $this
+     */
+    public function addColumnSimple($name, $title = null)
+    {
+        return $this->addColumnFromArray(['name' => $name, 'title' => $title]);
+    }
+
+    /**
+     * Add a column.
+     *
+     * @param $array
+     * @return $this
+     */
+    public function addColumnFromArray($array)
+    {
+        return $this->addColumn(new Column($array));
+    }
+
+    /**
+     * Add a column.
+     *
      * @param Column $column
      *
      * @return $this
