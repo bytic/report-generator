@@ -20,4 +20,9 @@ interface ReportInterface
      * @return Column[]
      */
     public function getHeader();
+
+    /**
+     * @return \Generator
+     */
+    public function getData();
 }

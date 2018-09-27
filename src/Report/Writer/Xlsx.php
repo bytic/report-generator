@@ -80,10 +80,11 @@ class Xlsx extends AbstractWriter implements WriterInterface
                 ->setTitle($this->report->getDefinition()->getTitle())
                 ->setSubject($this->report->getDefinition()->getTitle());
 
+            $header = $this->report->getHeader();
             $this->addHeader($spreadsheet, $this->report->getHeader());
 
-            foreach ($this->report->getAllRows() as $rowData) {
-                $this->addRow($spreadsheet, $rowData);
+            foreach ($this->report->getData() as $rowData) {
+                $this->addRow($spreadsheet, $rowData, $header);
             }
 
             $lastCol = $spreadsheet->getActiveSheet()->getHighestColumn();
@@ -123,16 +124,19 @@ class Xlsx extends AbstractWriter implements WriterInterface
      *
      * @param Spreadsheet $spreadsheet
      * @param array $row
+     * @param Column[] $header
      *
      * @return $this
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function addRow(Spreadsheet $spreadsheet, array $row)
+    protected function addRow(Spreadsheet $spreadsheet, array $row, array $header)
     {
         $sheet = $spreadsheet->getActiveSheet();
         $col = 'A';
-        foreach ($row as $value) {
-            $sheet->setCellValue($col . $this->currentRow, $value);
+        foreach ($header as $column) {
+            if (isset($row[$column->getName()])) {
+                $sheet->setCellValue($col . $this->currentRow, $row[$column->getName()]);
+            }
             $col++;
         }
         $this->currentRow++;
