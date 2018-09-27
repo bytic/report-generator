@@ -22,6 +22,9 @@ trait HasDataProvider
      */
     public function getDataProvider()
     {
+        if ($this->dataProvider === null) {
+            $this->initDataProvider();
+        }
         return $this->dataProvider;
     }
 
@@ -30,6 +33,40 @@ trait HasDataProvider
      */
     public function setDataProvider($dataProvider)
     {
+        $dataProvider->setParams($this->generateParamsForDefinition());
         $this->dataProvider = $dataProvider;
+    }
+
+    protected function initDataProvider()
+    {
+        $class = $this->initDataProviderClass();
+        /** @var AbstractDataProvider $definition */
+        $definition = new $class();
+        $definition->setParams($this->generateParamsForDefinition());
+        $this->definition = $definition;
+    }
+
+    /**
+     * @return string
+     */
+    protected function initDataProviderClass()
+    {
+        if (method_exists($this, 'getDataProviderClass')) {
+            return $this->getDataProviderClass();
+        }
+        return $this->generateDataProviderClass();
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateDataProviderClass()
+    {
+        try {
+            $class = new \ReflectionClass($this);
+            return $class->getNamespaceName() . '\\DataProvider';
+        } catch (\ReflectionException $e) {
+        }
+        return null;
     }
 }

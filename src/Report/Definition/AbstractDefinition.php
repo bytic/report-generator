@@ -2,12 +2,16 @@
 
 namespace ByTIC\ReportGenerator\Report\Definition;
 
+use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
+
 /**
  * Class AbstractDefinition
  * @package ByTIC\ReportGenerator\Report\Definition
  */
 abstract class AbstractDefinition
 {
+    use HasParamsTrait;
+
     /**
      * The report title.
      *

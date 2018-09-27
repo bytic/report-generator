@@ -40,7 +40,10 @@ trait HasDefinitionTrait
     protected function initDefinition()
     {
         $class = $this->initDefinitionClass();
-        $this->definition = new $class();
+        /** @var AbstractDefinition $definition */
+        $definition = new $class();
+        $definition->setParams($this->generateParamsForDefinition());
+        $this->definition = $definition;
     }
 
     /**
