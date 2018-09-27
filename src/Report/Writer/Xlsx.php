@@ -5,7 +5,6 @@ namespace ByTIC\ReportGenerator\Report\Writer;
 use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetWriterFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -119,8 +118,7 @@ class Xlsx extends AbstractWriter implements WriterInterface
     }
 
     /**
-     * @param Response $response
-     * @return void
+     * @inheritdoc
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
@@ -136,5 +134,7 @@ class Xlsx extends AbstractWriter implements WriterInterface
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8'
         );
         $response->headers->set('Pragma', 'public');
+
+        return $response;
     }
 }

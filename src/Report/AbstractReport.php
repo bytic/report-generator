@@ -5,7 +5,7 @@ namespace ByTIC\ReportGenerator\Report;
 use ByTIC\ReportGenerator\Report\Traits\HasDataProvider;
 use ByTIC\ReportGenerator\Report\Traits\HasDefinitionTrait;
 use ByTIC\ReportGenerator\Report\Traits\HasWritersTrait;
-use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
+use ByTIC\ReportGenerator\Report\Traits\HasParamsTrait;
 
 /**
  * Class ReportAbstract

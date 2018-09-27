@@ -12,6 +12,7 @@ use ByTIC\ReportGenerator\Report\Writer\Traits\CanRenderTrait;
 abstract class AbstractWriter
 {
     use CanRenderTrait;
+
     /**
      * @var ReportInterface
      */
