@@ -30,7 +30,7 @@ trait CanRenderTrait
         $response->headers->set('Cache-Control', 'public');
         $response->headers->set(
             'Content-Disposition',
-            'attachment; filename="' . $this->getReport()->getDefinition()->getFileName() . '"'
+            'attachment; filename="' . $this->getFileName() . '"'
         );
         return $response;
     }

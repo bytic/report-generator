@@ -159,4 +159,12 @@ class Xlsx extends AbstractWriter implements WriterInterface
 
         return $response;
     }
+
+    /**
+     * @return string
+     */
+    protected function getFileExtension()
+    {
+        return '.xlxs';
+    }
 }

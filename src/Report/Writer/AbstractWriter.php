@@ -50,4 +50,17 @@ abstract class AbstractWriter
     {
         $this->report = $report;
     }
+
+    /**
+     * @return string
+     */
+    protected function getFileName()
+    {
+        return $this->getReport()->getDefinition()->getFileName() . '.' . $this->getFileExtension();
+    }
+
+    /**
+     * @return string
+     */
+    abstract protected function getFileExtension();
 }
