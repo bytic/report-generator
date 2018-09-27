@@ -39,6 +39,7 @@ abstract class AbstractReport
             return;
         }
         $this->validateDefinition();
+        $this->generateData();
     }
 
     public function render()

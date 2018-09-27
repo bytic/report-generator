@@ -81,10 +81,10 @@ class Xlsx extends AbstractWriter implements WriterInterface
                 ->setSubject($this->report->getDefinition()->getTitle());
 
             $this->addHeader($spreadsheet, $this->report->getHeader());
-//
-//            foreach ($this->report->getAllRows() as $rowData) {
-//                $this->addRow($spreadsheet, $rowData);
-//            }
+
+            foreach ($this->report->getAllRows() as $rowData) {
+                $this->addRow($spreadsheet, $rowData);
+            }
 
             $lastCol = $spreadsheet->getActiveSheet()->getHighestColumn();
             $spreadsheet->getActiveSheet()->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);
@@ -165,6 +165,6 @@ class Xlsx extends AbstractWriter implements WriterInterface
      */
     protected function getFileExtension()
     {
-        return '.xlxs';
+        return '.xlsx';
     }
 }
