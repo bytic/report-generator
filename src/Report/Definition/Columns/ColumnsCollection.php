@@ -2,11 +2,15 @@
 
 namespace ByTIC\ReportGenerator\Report\Definition\Columns;
 
+use ArrayAccess;
+use ArrayIterator;
+use IteratorAggregate;
+
 /**
  * Class ColumnsCollection
  * @package ByTIC\ReportGenerator\Report\Definition\Columns
  */
-class ColumnsCollection
+class ColumnsCollection implements IteratorAggregate, ArrayAccess
 {
     /**
      * Column definitions.
@@ -112,5 +116,51 @@ class ColumnsCollection
     public function populateFromSibling(ColumnsCollection $collection)
     {
         $this->setColumns($collection->getColumns());
+    }
+
+    /**
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->columns);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->columns[$offset]) || array_key_exists($offset, $this->columns);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetGet($offset)
+    {
+        return array_key_exists($offset, $this->columns) ? $this->columns[$offset] : null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->columns[$offset] = $value;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetUnset($offset)
+    {
+        if (!isset($this->items[$offset]) && !array_key_exists($offset, $this->columns)) {
+            return null;
+        }
+        $removed = $this->columns[$offset];
+        unset($this->columns[$offset]);
+
+        return $removed;
     }
 }
