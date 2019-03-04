@@ -22,6 +22,14 @@ class MultiColumn extends Column
     }
 
     /**
+     * @return int|void
+     */
+    public function childrenCount()
+    {
+        return count($this->children);
+    }
+
+    /**
      * Add a column.
      *
      * @param $array

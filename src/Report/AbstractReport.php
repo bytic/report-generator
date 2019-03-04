@@ -50,12 +50,12 @@ abstract class AbstractReport
     /**
      * Get the resulting column display names after running report.
      *
-     * @return Column[]
+     * @return Column[]|Definition\Header\Header
      */
     public function getHeader()
     {
         $this->run();
-        return $this->getDefinition()->getColumns();
+        return $this->getDefinition()->getHeader();
     }
 
     /**

@@ -38,6 +38,14 @@ trait HasRowsTrait
     }
 
     /**
+     * @return ColumnsCollection[]
+     */
+    public function getRows(): array
+    {
+        return $this->rows;
+    }
+
+    /**
      * @return ColumnsCollection|mixed
      */
     public function getLastRow()
