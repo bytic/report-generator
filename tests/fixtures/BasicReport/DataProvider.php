@@ -17,6 +17,7 @@ class DataProvider extends AbstractDataProvider
      */
     protected function generateData()
     {
-        $this->yieldDataRow(['year' => 2016, 'amount' => 320]);
+        yield $this->newDataRow(['year' => 2016, 'amount' => 320]);
+        yield $this->newDataRow(['year' => 2018, 'amount' => 350]);
     }
 }

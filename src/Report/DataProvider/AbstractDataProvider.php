@@ -41,7 +41,7 @@ abstract class AbstractDataProvider
 
     protected function initData()
     {
-        $this->data = $this->generateData();
+        $this->setData($this->generateData());
     }
 
     /**

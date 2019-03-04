@@ -16,6 +16,15 @@ trait HasDataRowsTrait
      */
     protected function yieldDataRow($data = [])
     {
-        yield new DataRow($data);
+        yield $this->newDataRow($data);
+    }
+
+    /**
+     * @param array $data
+     * @return DataRow
+     */
+    protected function newDataRow($data = [])
+    {
+        return new DataRow($data);
     }
 }
