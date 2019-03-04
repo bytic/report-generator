@@ -57,6 +57,14 @@ class Column
     }
 
     /**
+     * @param string $name
+     */
+    public function prependName(string $name)
+    {
+        $this->name = $name . '.' . $this->name;
+    }
+
+    /**
      * @return string
      */
     public function getTitle(): string

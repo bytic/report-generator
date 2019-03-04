@@ -2,7 +2,7 @@
 
 namespace ByTIC\ReportGenerator\Report\Definition;
 
-use ByTIC\ReportGenerator\Report\Definition\Traits\HasColumnsTrait;
+use ByTIC\ReportGenerator\Report\Definition\Traits\HasHeaderTrait;
 use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 
 /**
@@ -12,7 +12,9 @@ use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 abstract class AbstractDefinition
 {
     use HasParamsTrait;
-    use HasColumnsTrait;
+    use HasHeaderTrait;
+
+
 
     /**
      * The report title.
@@ -27,6 +29,14 @@ abstract class AbstractDefinition
      * @var string
      */
     protected $fileName;
+
+    /**
+     * AbstractDefinition constructor.
+     */
+    public function __construct()
+    {
+        $this->initHeader();
+    }
 
     /**
      * @param string $title

@@ -1,14 +1,12 @@
 <?php
 
-namespace ByTIC\ReportGenerator\Report\Definition\Traits;
-
-use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
+namespace ByTIC\ReportGenerator\Report\Definition\Columns;
 
 /**
- * Trait HasColumnsTrait
- * @package ByTIC\ReportGenerator\Report\Definition\Traits
+ * Class ColumnsCollection
+ * @package ByTIC\ReportGenerator\Report\Definition\Columns
  */
-trait HasColumnsTrait
+class ColumnsCollection
 {
     /**
      * Column definitions.
@@ -90,5 +88,29 @@ trait HasColumnsTrait
             return $this->columns[$name];
         }
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumnsNames()
+    {
+        return array_keys($this->columns);
+    }
+
+    /**
+     * @return int
+     */
+    public function columnsCount()
+    {
+        return count($this->columns);
+    }
+
+    /**
+     * @param ColumnsCollection $collection
+     */
+    public function populateFromSibling(ColumnsCollection $collection)
+    {
+        $this->setColumns($collection->getColumns());
     }
 }
