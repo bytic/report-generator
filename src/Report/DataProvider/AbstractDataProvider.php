@@ -2,6 +2,7 @@
 
 namespace ByTIC\ReportGenerator\Report\DataProvider;
 
+use ByTIC\ReportGenerator\Report\DataProvider\Traits\HasDataRowsTrait;
 use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 use Generator;
 
@@ -12,6 +13,7 @@ use Generator;
 abstract class AbstractDataProvider
 {
     use HasParamsTrait;
+    use HasDataRowsTrait;
 
     /**
      * @var Generator

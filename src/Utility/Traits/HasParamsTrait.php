@@ -8,7 +8,7 @@ namespace ByTIC\ReportGenerator\Utility\Traits;
  */
 trait HasParamsTrait
 {
-    protected $params;
+    protected $params = [];
 
     /**
      * @return mixed

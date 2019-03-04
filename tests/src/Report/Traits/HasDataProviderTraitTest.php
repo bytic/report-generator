@@ -2,7 +2,7 @@
 
 namespace ByTIC\ReportGenerator\Tests\Report\Traits;
 
-use ByTIC\ReportGenerator\Fixtures\BasicReport\Report;
+use ByTIC\ReportGenerator\Tests\Fixtures\BasicReport\Report;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 
 /**
