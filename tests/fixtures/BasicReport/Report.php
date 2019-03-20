@@ -3,12 +3,13 @@
 namespace ByTIC\ReportGenerator\Tests\Fixtures\BasicReport;
 
 use ByTIC\ReportGenerator\Report\AbstractReport;
+use ByTIC\ReportGenerator\Report\ReportInterface;
 
 /**
  * Class Report
  * @package ByTIC\ReportGenerator\Tests\Fixtures\BasicReport
  */
-class Report extends AbstractReport
+class Report extends AbstractReport implements ReportInterface
 {
 
     /**
