@@ -48,8 +48,20 @@ class MultiColumn extends Column
         if ($column instanceof MultiColumn) {
             $column->prependChildrenNames($this->getName());
         }
+        $column->setParam('parentName', $this->getName());
         $column->prependName($this->getName());
         $this->children[$column->getName()] = $column;
+    }
+
+    /**
+     * @param Column $column
+     * @return bool
+     */
+    public function isFirstChild($column)
+    {
+        $keys = array_keys($this->children);
+        $firstKey = reset($keys);
+        return $column->getName() == $firstKey;
     }
 
     /**
