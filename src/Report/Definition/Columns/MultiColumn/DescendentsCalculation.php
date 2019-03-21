@@ -48,7 +48,7 @@ class DescendentsCalculation
      */
     protected function scan($children = null, $level = 0)
     {
-        $children = $children ? $children : $this->column->getChildren();
+        $children = $children === null ? $this->column->getChildren() : $children;
         foreach ($children as $child) {
             if ($child instanceof MultiColumn) {
                 $this->scan($child->getChildren(), $level +1);
