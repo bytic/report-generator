@@ -59,8 +59,9 @@ trait HasRowsTrait
     protected function initRow($i)
     {
         $this->rows[$i] = new ColumnsCollection();
-        if (isset($this->rows[$i -1])) {
-            $this->rows[$i]->populateFromSibling($this->rows[$i -1]);
+        if (isset($this->rows[$i - 1])) {
+            $this->rows[$i]->populateFromSibling($this->rows[$i - 1]);
         }
+        ksort($this->rows);
     }
 }

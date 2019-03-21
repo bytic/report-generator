@@ -2,6 +2,8 @@
 
 namespace ByTIC\ReportGenerator\Report\Definition\Columns;
 
+use ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn\DescendentsCalculation;
+
 /**
  * Class Column
  * @package ByTIC\ReportGenerator\Report\Definition\Columns
@@ -12,6 +14,8 @@ class MultiColumn extends Column
      * @var Column[]
      */
     protected $children = [];
+
+    protected $descendantsCount = 0;
 
     /**
      * @return Column[]
@@ -51,6 +55,33 @@ class MultiColumn extends Column
         $column->setParam('parentName', $this->getName());
         $column->prependName($this->getName());
         $this->children[$column->getName()] = $column;
+
+        $this->calculateDescendantsCount();
+    }
+
+    /**
+     * @return int
+     */
+    public function getDescendantsCount(): int
+    {
+        return $this->descendantsCount;
+    }
+
+    /**
+     * @param int $descendantsCount
+     */
+    public function setDescendantsCount(int $descendantsCount)
+    {
+        $this->descendantsCount = $descendantsCount;
+    }
+
+    /**
+     * @param null $children
+     * @return int|void
+     */
+    public function calculateDescendantsCount()
+    {
+        $this->setDescendantsCount(DescendentsCalculation::calculate($this));
     }
 
     /**
