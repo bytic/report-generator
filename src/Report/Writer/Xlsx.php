@@ -2,7 +2,9 @@
 
 namespace ByTIC\ReportGenerator\Report\Writer;
 
+use ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow;
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
+use ByTIC\ReportGenerator\Report\Definition\Header\Header;
 use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetWriterFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
@@ -108,15 +110,17 @@ class Xlsx extends AbstractWriter implements WriterInterface
      * @return $this
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function addHeader(Spreadsheet $spreadsheet, array $header)
+    protected function addHeader(Spreadsheet $spreadsheet, Header $header)
     {
         $sheet = $spreadsheet->getActiveSheet();
-        $col = 'A';
-        foreach ($header as $column) {
-            $sheet->setCellValue($col . $this->currentRow, $column->getTitle());
-            $col++;
+        foreach ($header as $headerRow) {
+            $col = 'A';
+            foreach ($headerRow as $column) {
+                $sheet->setCellValue($col . $this->currentRow, $column->getTitle());
+                $col++;
+            }
+            $this->currentRow++;
         }
-        $this->currentRow++;
         return $this;
     }
 
@@ -124,20 +128,19 @@ class Xlsx extends AbstractWriter implements WriterInterface
      * Add a row of values to the current worksheet.
      *
      * @param Spreadsheet $spreadsheet
-     * @param array $row
-     * @param Column[] $header
+     * @param DataRow $row
+     * @param Header $header
      *
      * @return $this
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function addRow(Spreadsheet $spreadsheet, array $row, array $header)
+    protected function addRow(Spreadsheet $spreadsheet, DataRow $row, Header $header)
     {
         $sheet = $spreadsheet->getActiveSheet();
         $col = 'A';
-        foreach ($header as $column) {
-            if (isset($row[$column->getName()])) {
-                $sheet->setCellValue($col . $this->currentRow, $row[$column->getName()]);
-            }
+        $lastHeaderRow = $header->getLastRow();
+        foreach ($lastHeaderRow as $column) {
+            $sheet->setCellValue($col . $this->currentRow, $row->getValue($column->getName()));
             $col++;
         }
         $this->currentRow++;
