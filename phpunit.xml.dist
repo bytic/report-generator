@@ -27,7 +27,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
             <exclude>
-                <directory>./src/templates</directory>
+                <directory>./src/Report/Writer/HtmlWriter/resources</directory>
             </exclude>
         </whitelist>
     </filter>
