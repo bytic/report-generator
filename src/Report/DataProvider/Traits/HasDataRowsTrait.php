@@ -16,7 +16,7 @@ trait HasDataRowsTrait
      */
     protected function yieldDataRow($data = [])
     {
-        yield $this->newDataRow($data);
+        yield $data instanceof DataRow ? $data : $this->newDataRow($data);
     }
 
     /**
