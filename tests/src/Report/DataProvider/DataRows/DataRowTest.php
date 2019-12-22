@@ -37,9 +37,4 @@ class DataRowTest extends AbstractTest
         $column = new Column(['name' => 'year']);
         self::assertSame(2018, $data->getValue($column));
     }
-
-    public function testAppendValue()
-    {
-
-    }
 }
