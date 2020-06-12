@@ -19,16 +19,41 @@ trait HasWritersTrait
     protected $writers = [];
 
     /**
+     * @var string[]
+     */
+    protected $customWriters = null;
+
+    /**
      * @param null $type
      * @return AbstractWriter
      */
     public function getWriter($type = null)
     {
+        $this->checkRegisterCustomWriters();
         $type = $this->checkWriterType($type);
         if (!isset($this->writers[$type])) {
             $this->initWriter($type);
         }
         return $this->writers[$type];
+    }
+
+    /**
+     * @return array|string[]|null
+     */
+    protected function checkRegisterCustomWriters()
+    {
+        if ($this->customWriters === null) {
+            $this->customWriters = $this->registerCustomWriters();
+        }
+        return $this->customWriters;
+    }
+
+    /**
+     * @return array
+     */
+    protected function registerCustomWriters()
+    {
+        return [];
     }
 
     /**
@@ -55,6 +80,9 @@ trait HasWritersTrait
      */
     public function checkWriterType($type = null)
     {
+        if (isset($this->customWriters[$type])) {
+            return $this->customWriters[$type];
+        }
         if ($this->validWriterType($type)) {
             return $type;
         }

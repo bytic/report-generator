@@ -76,29 +76,38 @@ class Xlsx extends AbstractWriter implements WriterInterface
     protected function getSpreadsheet()
     {
         if (!$this->writer) {
-            $spreadsheet = new Spreadsheet();
-
-            $spreadsheet->getProperties()
-                ->setTitle($this->report->getDefinition()->getTitle())
-                ->setSubject($this->report->getDefinition()->getTitle());
-
-            $header = $this->report->getHeader();
-            $this->addHeader($spreadsheet, $this->report->getHeader());
-
-            foreach ($this->report->getData() as $rowData) {
-                $this->addRow($spreadsheet, $rowData, $header);
-            }
-
-            $lastCol = $spreadsheet->getActiveSheet()->getHighestColumn();
-            $spreadsheet->getActiveSheet()->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);
-            $spreadsheet->getActiveSheet()->freezePane('A2');
-
-            foreach (range('A', $lastCol) as $col) {
-                $spreadsheet->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
-            }
-            $this->writer = $spreadsheet;
+            $this->writer = $this->generateSpreadsheet();
         }
         return $this->writer;
+    }
+
+    /**
+     * @return Spreadsheet
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    protected function generateSpreadsheet()
+    {
+        $spreadsheet = new Spreadsheet();
+
+        $spreadsheet->getProperties()
+            ->setTitle($this->report->getDefinition()->getTitle())
+            ->setSubject($this->report->getDefinition()->getTitle());
+
+        $header = $this->report->getHeader();
+        $this->addHeader($spreadsheet, $this->report->getHeader());
+
+        foreach ($this->report->getData() as $rowData) {
+            $this->addRow($spreadsheet, $rowData, $header);
+        }
+
+        $lastCol = $spreadsheet->getActiveSheet()->getHighestColumn();
+        $spreadsheet->getActiveSheet()->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);
+        $spreadsheet->getActiveSheet()->freezePane('A2');
+
+        foreach (range('A', $lastCol) as $col) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+        }
+        return $spreadsheet;
     }
 
     /**

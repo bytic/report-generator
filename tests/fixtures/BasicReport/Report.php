@@ -24,4 +24,14 @@ class Report extends AbstractReport implements ReportInterface
             ->addColumnSimple('year')
             ->addColumnSimple('amount');
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerCustomWriters()
+    {
+        return [
+            'Xlsx' => XlsxWriter::class
+        ];
+    }
 }

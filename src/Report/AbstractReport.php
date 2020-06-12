@@ -3,10 +3,6 @@
 namespace ByTIC\ReportGenerator\Report;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
-use ByTIC\ReportGenerator\Report\Traits\HasDataProvider;
-use ByTIC\ReportGenerator\Report\Traits\HasDefinitionTrait;
-use ByTIC\ReportGenerator\Report\Traits\HasWritersTrait;
-use ByTIC\ReportGenerator\Report\Traits\HasParamsTrait;
 
 /**
  * Class ReportAbstract
@@ -14,10 +10,10 @@ use ByTIC\ReportGenerator\Report\Traits\HasParamsTrait;
  */
 abstract class AbstractReport
 {
-    use HasDefinitionTrait;
-    use HasWritersTrait;
-    use HasDataProvider;
-    use HasParamsTrait;
+    use Traits\HasDefinitionTrait;
+    use Traits\HasWritersTrait;
+    use Traits\HasDataProvider;
+    use Traits\HasParamsTrait;
 
     /**
      * @var bool
