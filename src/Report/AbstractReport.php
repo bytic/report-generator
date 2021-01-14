@@ -10,10 +10,11 @@ use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
  */
 abstract class AbstractReport
 {
-    use Traits\HasDefinitionTrait;
-    use Traits\HasWritersTrait;
     use Traits\HasDataProvider;
+    use Traits\HasDefinitionTrait;
     use Traits\HasParamsTrait;
+    use Traits\HasPerspectivesTrait;
+    use Traits\HasWritersTrait;
 
     /**
      * @var bool

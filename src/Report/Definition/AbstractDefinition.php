@@ -14,8 +14,6 @@ abstract class AbstractDefinition
     use HasParamsTrait;
     use HasHeaderTrait;
 
-
-
     /**
      * The report title.
      *

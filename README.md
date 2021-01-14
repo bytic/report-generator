@@ -10,3 +10,6 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/bytic/services-report-generator.svg?style=flat-square)](https://scrutinizer-ci.com/g/bytic/services-report-generator)
 [![StyleCI](https://styleci.io/repos/87421067/shield?branch=master)](https://styleci.io/repos/87421067)
 [![Total Downloads](https://img.shields.io/packagist/dt/bytic/report-generator.svg?style=flat-square)](https://packagist.org/packages/bytic/report-generator)
+
+#### Inspiration
+* https://github.com/koolreport/core
