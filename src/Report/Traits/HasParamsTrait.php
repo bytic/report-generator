@@ -23,6 +23,8 @@ trait HasParamsTrait
      */
     protected function generateParamsForDataProvider()
     {
-        return $this->getParams();
+        $params = $this->getParams();
+        $params['perspective'] = $this->currentPerspective();
+        return $params;
     }
 }

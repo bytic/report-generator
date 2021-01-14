@@ -49,7 +49,7 @@ trait HasPerspectivesTrait
         return $perspective;
     }
 
-    public function setPerspective($perspective): Perspective
+    public function setPerspective($perspective): ?Perspective
     {
         return $this->currentPerspective($perspective);
     }
