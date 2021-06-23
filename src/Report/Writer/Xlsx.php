@@ -89,6 +89,8 @@ class Xlsx extends AbstractWriter implements WriterInterface
     {
         $spreadsheet = new Spreadsheet();
 
+        $data  =$this->report->getData();
+
         $spreadsheet->getProperties()
             ->setTitle($this->report->getDefinition()->getTitle())
             ->setSubject($this->report->getDefinition()->getTitle());
@@ -96,7 +98,7 @@ class Xlsx extends AbstractWriter implements WriterInterface
         $header = $this->report->getHeader();
         $this->addHeader($spreadsheet, $this->report->getHeader());
 
-        foreach ($this->report->getData() as $rowData) {
+        foreach ($data as $rowData) {
             $this->addRow($spreadsheet, $rowData, $header);
         }
 
