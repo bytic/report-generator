@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\DataProvider\DataRows;
 
 use ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow;
@@ -7,12 +9,10 @@ use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 
 /**
- * Class DataRowTest
- * @package ByTIC\ReportGenerator\Tests\Report\DataProvider\DataRows
+ * Class DataRowTest.
  */
 class DataRowTest extends AbstractTest
 {
-
     public function testGetValueString()
     {
         $data = new DataRow(['year' => 2018]);

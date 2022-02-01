@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Header\Traits;
 
 use ArrayIterator;
 
 /**
- * Trait ArrayMethodsTrait
- * @package ByTIC\ReportGenerator\Report\Definition\Header\Traits
+ * Trait ArrayMethodsTrait.
  */
 trait ArrayMethodsTrait
 {
@@ -19,7 +20,7 @@ trait ArrayMethodsTrait
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetExists($offset)
     {
@@ -27,7 +28,7 @@ trait ArrayMethodsTrait
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetGet($offset)
     {
@@ -35,7 +36,7 @@ trait ArrayMethodsTrait
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -43,7 +44,7 @@ trait ArrayMethodsTrait
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetUnset($offset)
     {

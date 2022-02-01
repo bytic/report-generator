@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Perspectives;
 
 use Nip\Collections\Typed\ClassCollection;
 
 /**
- * Class PerspectiveCollection
- * @package ByTIC\ReportGenerator\Perspectives
+ * Class PerspectiveCollection.
  */
 class PerspectiveCollection extends ClassCollection
 {

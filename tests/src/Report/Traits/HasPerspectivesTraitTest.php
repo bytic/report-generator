@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\Traits;
 
 use ByTIC\ReportGenerator\Perspectives\Perspective;
@@ -7,12 +9,11 @@ use ByTIC\ReportGenerator\Tests\AbstractTest;
 use ByTIC\ReportGenerator\Tests\Fixtures\BasicReport\Report;
 
 /**
- * Class HasPerspectivesTraitTest
- * @package ByTIC\ReportGenerator\Tests\Report\Traits
+ * Class HasPerspectivesTraitTest.
  */
 class HasPerspectivesTraitTest extends AbstractTest
 {
-    public function test_current_perspective_from_config()
+    public function testCurrentPerspectiveFromConfig()
     {
         $report = new Report();
         $report->createPerspective('test');

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\Definition\Columns;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 
 /**
- * Class ColumnTest
- * @package ByTIC\ReportGenerator\Tests\Report\Definition\Columns
+ * Class ColumnTest.
  */
 class ColumnTest extends AbstractTest
 {

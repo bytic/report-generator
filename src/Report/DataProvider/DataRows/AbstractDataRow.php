@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\DataProvider\DataRows;
 
+use ArrayAccess;
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use Nip\Collections\Traits\AccessMethodsTrait;
 use Nip\Collections\Traits\ArrayAccessTrait;
 use Nip\Collections\Traits\OperationsOnItemsTrait;
 
 /**
- * Class AbstractDataRow
- * @package ByTIC\ReportGenerator\Report\DataProvider\DataRows
+ * Class AbstractDataRow.
  */
-abstract class AbstractDataRow implements \ArrayAccess
+abstract class AbstractDataRow implements ArrayAccess
 {
     use ArrayAccessTrait;
     use AccessMethodsTrait;
@@ -23,9 +25,9 @@ abstract class AbstractDataRow implements \ArrayAccess
     protected $items = [];
     protected $index = 0;
 
-
     /**
      * Collection constructor.
+     *
      * @param array $items
      */
     public function __construct($items = [])
@@ -50,11 +52,13 @@ abstract class AbstractDataRow implements \ArrayAccess
     /**
      * @param $column
      * @param null $default
+     *
      * @return mixed|null
      */
     public function getValue($column, $default = null)
     {
         $column = $this->keyForColumn($column);
+
         return $this->get($column, $default);
     }
 
@@ -65,12 +69,13 @@ abstract class AbstractDataRow implements \ArrayAccess
     public function addValue($column, $value)
     {
         $column = $this->keyForColumn($column);
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->valueAdd($column, $value);
     }
 
     /**
      * @param $column
+     *
      * @return string
      */
     protected function keyForColumn($column)

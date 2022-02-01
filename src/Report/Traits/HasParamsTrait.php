@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Traits;
 
 /**
- * Trait HasParamsTrait
- * @package ByTIC\ReportGenerator\Report\Traits
+ * Trait HasParamsTrait.
  */
 trait HasParamsTrait
 {
@@ -25,6 +26,7 @@ trait HasParamsTrait
     {
         $params = $this->getParams();
         $params['perspective'] = $this->currentPerspective();
+
         return $params;
     }
 }

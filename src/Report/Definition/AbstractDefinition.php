@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition;
 
 use ByTIC\ReportGenerator\Report\Definition\Traits\HasHeaderTrait;
 use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 
 /**
- * Class AbstractDefinition
- * @package ByTIC\ReportGenerator\Report\Definition
+ * Class AbstractDefinition.
  */
 abstract class AbstractDefinition
 {
@@ -22,7 +23,7 @@ abstract class AbstractDefinition
     protected $title;
 
     /**
-     * The file name
+     * The file name.
      *
      * @var string
      */
@@ -38,11 +39,13 @@ abstract class AbstractDefinition
 
     /**
      * @param string $title
+     *
      * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 

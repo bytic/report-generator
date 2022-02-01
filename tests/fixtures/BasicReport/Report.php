@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Fixtures\BasicReport;
 
 use ByTIC\ReportGenerator\Report\AbstractReport;
 use ByTIC\ReportGenerator\Report\ReportInterface;
 
 /**
- * Class Report
- * @package ByTIC\ReportGenerator\Tests\Fixtures\BasicReport
+ * Class Report.
  */
 class Report extends AbstractReport implements ReportInterface
 {
-
     /**
      * Method for setting up the report definition.
      */
@@ -26,12 +26,12 @@ class Report extends AbstractReport implements ReportInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function registerCustomWriters()
     {
         return [
-            'Xlsx' => XlsxWriter::class
+            'Xlsx' => XlsxWriter::class,
         ];
     }
 }

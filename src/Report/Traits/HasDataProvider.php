@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Traits;
 
 use ByTIC\ReportGenerator\Report\DataProvider\AbstractDataProvider;
 use Generator;
+use ReflectionClass;
+use ReflectionException;
 
 /**
- * Class HasDataProvider
- * @package ByTIC\ReportGenerator\Report\Traits
+ * Class HasDataProvider.
  */
 trait HasDataProvider
 {
@@ -26,6 +29,7 @@ trait HasDataProvider
     public function getData()
     {
         $this->run();
+
         return $this->data;
     }
 
@@ -34,15 +38,15 @@ trait HasDataProvider
         $this->data = $this->getDataProvider()->getData();
     }
 
-
     /**
      * @return AbstractDataProvider
      */
     public function getDataProvider()
     {
-        if ($this->dataProvider === null) {
+        if (null === $this->dataProvider) {
             $this->initDataProvider();
         }
+
         return $this->dataProvider;
     }
 
@@ -71,6 +75,7 @@ trait HasDataProvider
         if (method_exists($this, 'getDataProviderClass')) {
             return $this->getDataProviderClass();
         }
+
         return $this->generateDataProviderClass();
     }
 
@@ -80,10 +85,12 @@ trait HasDataProvider
     protected function generateDataProviderClass()
     {
         try {
-            $class = new \ReflectionClass($this);
+            $class = new ReflectionClass($this);
+
             return $class->getNamespaceName() . '\\DataProvider';
-        } catch (\ReflectionException $exception) {
+        } catch (ReflectionException $exception) {
         }
+
         return null;
     }
 }

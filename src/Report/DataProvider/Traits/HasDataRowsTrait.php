@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\DataProvider\Traits;
 
 use ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow;
+use Generator;
 
 /**
- * Trait HasDataRowsTrait
- * @package ByTIC\ReportGenerator\Report\DataProvider\Traits
+ * Trait HasDataRowsTrait.
  */
 trait HasDataRowsTrait
 {
     /**
      * @param array $data
-     * @return \Generator
+     *
+     * @return Generator
      */
     protected function yieldDataRow($data = [])
     {
@@ -21,6 +24,7 @@ trait HasDataRowsTrait
 
     /**
      * @param array $data
+     *
      * @return DataRow
      */
     protected function newDataRow($data = [])

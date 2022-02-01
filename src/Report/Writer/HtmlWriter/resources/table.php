@@ -1,6 +1,10 @@
 <?php
-/** @var \ByTIC\ReportGenerator\Report\AbstractReport $report */
 
+declare(strict_types=1);
+
+/** @var AbstractReport $report */
+
+use ByTIC\ReportGenerator\Report\AbstractReport;
 use ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn;
 
 $report = $this->report;
@@ -31,7 +35,8 @@ $headerRows = $header->getRows();
         $styles .= 'font-weight: ' . ($level < 2 ? '800' : '300');
         ?>
         <tr>
-            <?php foreach ($headerRow as $column) { ?>
+            <?php
+            foreach ($headerRow as $column) { ?>
                 <?php
                 $borderStyle = $borderStyles[$level - 1];
                 $parentName = $column->getParam('parentName');
@@ -52,7 +57,7 @@ $headerRows = $header->getRows();
         </tr>
         <?php
         $lastHeaderRow = $headerRow;
-        $level++;
+        ++$level;
         ?>
     <?php } ?>
     </thead>

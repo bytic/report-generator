@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Writer;
 
 use ByTIC\ReportGenerator\Report\ReportInterface;
 use ByTIC\ReportGenerator\Report\Writer\Traits\CanRenderTrait;
 
 /**
- * Class AbstractWriter
- * @package ByTIC\ReportGenerator\Report\Writer
+ * Class AbstractWriter.
  */
 abstract class AbstractWriter
 {
@@ -20,8 +21,6 @@ abstract class AbstractWriter
 
     /**
      * WriterAbstract constructor.
-     *
-     * @param ReportInterface $report
      */
     public function __construct(ReportInterface $report)
     {

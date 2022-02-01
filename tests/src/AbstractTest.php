@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests;
 
-use PHPUnit\Framework\TestCase;
+use Bytic\Phpqa\PHPUnit\TestCase;
 
 /**
- * Class AbstractTest
+ * Class AbstractTest.
  */
 abstract class AbstractTest extends TestCase
 {

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 
 /**
- * Class ReportAbstract
- * @package ByTIC\ReportGenerator\Report
+ * Class ReportAbstract.
  */
 abstract class AbstractReport
 {
@@ -23,6 +24,7 @@ abstract class AbstractReport
 
     /**
      * AbstractReport constructor.
+     *
      * @param array $params
      */
     public function __construct($params = [])
@@ -52,20 +54,15 @@ abstract class AbstractReport
     public function getHeader()
     {
         $this->run();
+
         return $this->getDefinition()->getHeader();
     }
 
-    /**
-     * @return bool
-     */
     public function isReady(): bool
     {
         return $this->ready;
     }
 
-    /**
-     * @param bool $ready
-     */
     public function setReady(bool $ready)
     {
         $this->ready = $ready;

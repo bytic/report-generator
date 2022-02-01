@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\Definition\Columns;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
@@ -7,8 +9,7 @@ use ByTIC\ReportGenerator\Report\Definition\Columns\ColumnsCollection;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 
 /**
- * Class ColumnsCollectionTest
- * @package ByTIC\ReportGenerator\Tests\Report\Definition\Columns
+ * Class ColumnsCollectionTest.
  */
 class ColumnsCollectionTest extends AbstractTest
 {

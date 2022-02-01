@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn;
 
+/**
+ *
+ */
 class DescendentsCalculation
 {
     /**
@@ -15,6 +20,7 @@ class DescendentsCalculation
 
     /**
      * DescendentsCalculation constructor.
+     *
      * @param $column
      */
     public function __construct($column)
@@ -24,11 +30,13 @@ class DescendentsCalculation
 
     /**
      * @param MultiColumn $column
+     *
      * @return int
      */
     public static function calculate($column)
     {
         $calculator = new self($column);
+
         return $calculator->run();
     }
 
@@ -39,6 +47,7 @@ class DescendentsCalculation
     {
         $this->scan();
         ksort($this->levels);
+
         return array_pop($this->levels);
     }
 
@@ -48,15 +57,15 @@ class DescendentsCalculation
      */
     protected function scan($children = null, $level = 0)
     {
-        $children = $children === null ? $this->column->getChildren() : $children;
+        $children = null === $children ? $this->column->getChildren() : $children;
         foreach ($children as $child) {
             if ($child instanceof MultiColumn) {
-                $this->scan($child->getChildren(), $level +1);
+                $this->scan($child->getChildren(), $level + 1);
             }
             if (!isset($this->levels[$level])) {
                 $this->levels[$level] = 0;
             }
-            $this->levels[$level]++;
+            ++$this->levels[$level];
         }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\Definition\Traits;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
@@ -7,8 +9,7 @@ use ByTIC\ReportGenerator\Report\Definition\Definition;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 
 /**
- * Class HasColumnsTraitTest
- * @package ByTIC\ReportGenerator\Tests\Report\Definition\Traits
+ * Class HasColumnsTraitTest.
  */
 class HasColumnsTraitTest extends AbstractTest
 {

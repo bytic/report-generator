@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\DataProvider\Traits;
 
 use ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow;
@@ -8,8 +10,7 @@ use ByTIC\ReportGenerator\Tests\Fixtures\BasicReport\DataProvider;
 use Generator;
 
 /**
- * Class HasDataRowsTraitTest
- * @package ByTIC\ReportGenerator\Tests\Report\DataProvider\Traits
+ * Class HasDataRowsTraitTest.
  */
 class HasDataRowsTraitTest extends AbstractTest
 {

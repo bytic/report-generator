@@ -1,19 +1,31 @@
 {
   "name": "bytic/report-generator",
-  "type": "library",
   "description": "report generator library",
+  "license": "MIT",
+  "type": "library",
   "keywords": [
     "facebook",
     "pixel"
   ],
-  "homepage": "https://github.com/bytic/report-generator",
-  "license": "MIT",
   "authors": [
     {
       "name": "Gabriel Solomon",
       "email": "hello@gabrielsolomon.ro"
     }
   ],
+  "homepage": "https://github.com/bytic/report-generator",
+  "require": {
+    "php": "^7.2 || ^8.0",
+    "bytic/collections": "^0.9 || ^1.0 || ^2.0",
+    "bytic/package-base": "^1.0",
+    "phpoffice/phpspreadsheet": "^1.4",
+    "symfony/http-foundation": "^3.0 || ^4.0 || ^5.0 || ^6.0"
+  },
+  "require-dev": {
+    "bytic/phpqatools": "^1.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "ByTIC\\ReportGenerator\\": "src"
@@ -24,15 +36,5 @@
       "ByTIC\\ReportGenerator\\Tests\\": "tests/src",
       "ByTIC\\ReportGenerator\\Tests\\Fixtures\\": "tests/fixtures"
     }
-  },
-  "require": {
-    "php": "^7.2|^8.0",
-    "bytic/collections": "^0.9|^1.0",
-    "symfony/http-foundation": "^2.7|^3.0|^4.0|^5.0",
-    "phpoffice/phpspreadsheet": "^1.4"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^7.2|^8.0|^9.0",
-    "mockery/mockery": "^1.1"
   }
 }

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\Definition\Columns;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 
 /**
- * Class MultiColumnTest
- * @package ByTIC\ReportGenerator\Tests\Report\Definition\Columns
+ * Class MultiColumnTest.
  */
 class MultiColumnTest extends AbstractTest
 {
@@ -22,15 +23,15 @@ class MultiColumnTest extends AbstractTest
 
         foreach ([1, 2] as $row1) {
             $child = new MultiColumn([
-                'name' => 'child' . $row1,
-                'title' => 'child' . $row1
-            ]);
+                                         'name' => 'child' . $row1,
+                                         'title' => 'child' . $row1,
+                                     ]);
 
             foreach ([1, 2] as $row2) {
                 $child->addChildFromArray([
-                    'name' => 'child' . $row1 . $row2,
-                    'title' => 'child' . $row1 . $row2
-                ]);
+                                              'name' => 'child' . $row1 . $row2,
+                                              'title' => 'child' . $row1 . $row2,
+                                          ]);
             }
             $column->addChild($child);
         }

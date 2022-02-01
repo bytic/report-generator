@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Utility\Traits;
 
 /**
- * Trait HasParamsTrait
- * @package ByTIC\ReportGenerator\Utility
+ * Trait HasParamsTrait.
  */
 trait HasParamsTrait
 {
@@ -33,6 +34,7 @@ trait HasParamsTrait
     /**
      * @param $name
      * @param null $default
+     *
      * @return null
      */
     public function getParam($name, $default = null)
@@ -41,7 +43,8 @@ trait HasParamsTrait
         if (method_exists($this, $method)) {
             return $this->$method($name, $default);
         }
-        return isset($this->params[$name]) ? $this->params[$name] : $default;
+
+        return $this->params[$name] ?? $default;
     }
 
     /**
@@ -68,6 +71,7 @@ trait HasParamsTrait
 
     /**
      * @param $name
+     *
      * @return string
      */
     protected function generateGetParamMethod($name)
@@ -77,6 +81,7 @@ trait HasParamsTrait
 
     /**
      * @param $name
+     *
      * @return string
      */
     protected function generateSetParamMethod($name)

@@ -1,45 +1,53 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Writer;
 
 use ByTIC\ReportGenerator\Report\ReportInterface;
 use ByTIC\ReportGenerator\Report\Traits\HasWritersTrait;
 
 /**
- * Class WriterFactory
- * @package ByTIC\ReportGenerator\Report\Writer
+ * Class WriterFactory.
  */
 class WriterFactory
 {
     /**
      * @param ReportInterface|HasWritersTrait $report
      * @param string $type
-     * @return AbstractWriter
+     *
+     * @return AbstractWriter|WriterInterface
      */
-    public static function createWriter(ReportInterface $report, $type)
+    public static function createWriter(ReportInterface $report, $type): WriterInterface
     {
         $writerClass = static::writerClass($type);
+
         return new $writerClass($report);
     }
 
     /**
      * @param $type
-     * @return string
      */
-    public static function writerClass($type)
+    public static function writerClass($type): string
     {
         if (strpos($type, '\\')) {
             return $type;
         }
+
         return static::writerClassBase($type);
     }
 
     /**
      * @param $type
-     * @return string
      */
-    public static function writerClassBase($type)
+    public static function writerClassBase($type): string
     {
-        return 'ByTIC\ReportGenerator\Report\Writer\\' . ucfirst($type);
+        $base = 'ByTIC\ReportGenerator\Report\Writer\\';
+
+        if (class_exists($base . ucfirst($type))) {
+            return $base . $type;
+        }
+
+        return 'ByTIC\ReportGenerator\Report\Writer\\' . ucfirst($type) . 'Writer';
     }
 }

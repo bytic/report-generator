@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Header\Traits;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\ColumnsCollection;
 
 /**
- * Trait HasLevelsTrait
- * @package ByTIC\ReportGenerator\Report\Definition\Header
+ * Trait HasLevelsTrait.
  */
 trait HasRowsTrait
 {
@@ -25,11 +26,12 @@ trait HasRowsTrait
 
     /**
      * @param int $rowNum
+     *
      * @return ColumnsCollection
      */
     public function getRow($rowNum = null)
     {
-        $rowNum = $rowNum === null ? 0 : $rowNum;
+        $rowNum = null === $rowNum ? 0 : $rowNum;
         if (!isset($this->rows[$rowNum])) {
             $this->initRow($rowNum);
         }

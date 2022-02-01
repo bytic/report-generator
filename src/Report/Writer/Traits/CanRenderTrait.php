@@ -1,21 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Writer\Traits;
 
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Trait CanRenderTrait
- * @package ByTIC\ReportGenerator\Report\Writer\Traits
+ * Trait CanRenderTrait.
  */
 trait CanRenderTrait
 {
-
     public function render()
     {
         $response = $this->generateResponse();
         $response->send();
-        die();
+        exit();
     }
 
     /**
@@ -23,7 +23,7 @@ trait CanRenderTrait
      */
     protected function generateResponse()
     {
-        $response = new Response;
+        $response = new Response();
 
         $response = $this->generateResponseContent($response);
 
@@ -32,11 +32,13 @@ trait CanRenderTrait
             'Content-Disposition',
             'attachment; filename="' . $this->getFileName() . '"'
         );
+
         return $response;
     }
 
     /**
      * @param $response
+     *
      * @return Response
      */
     abstract protected function generateResponseContent($response);

@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Traits;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use ByTIC\ReportGenerator\Report\Definition\Header\Header;
 
 /**
- * Trait HasColumnsTrait
- * @package ByTIC\ReportGenerator\Report\Definition\Traits
+ * Trait HasColumnsTrait.
  */
 trait HasHeaderTrait
 {
     /**
-     * @var null|Header
+     * @var Header|null
      */
     protected $header = null;
 
@@ -33,8 +34,8 @@ trait HasHeaderTrait
      * Set the column definitions.
      *
      * @param Column[] $columns
-     *
      * @param null $row
+     *
      * @return $this
      */
     public function setColumns(array $columns = [], $row = null)
@@ -44,6 +45,7 @@ trait HasHeaderTrait
 
     /**
      * @param null $row
+     *
      * @return ColumnsCollection
      */
     public function getColumns($row = null)
@@ -56,6 +58,7 @@ trait HasHeaderTrait
      *
      * @param string $name
      * @param string|null $title
+     *
      * @return $this
      */
     public function addColumnSimple($name, $title = null, $row = null)
@@ -68,6 +71,7 @@ trait HasHeaderTrait
      *
      * @param $array
      * @param null $row
+     *
      * @return $this
      */
     public function addColumnFromArray($array, $row = null)
@@ -78,9 +82,8 @@ trait HasHeaderTrait
     /**
      * Add a column.
      *
-     * @param Column $column
-     *
      * @param null $row
+     *
      * @return $this
      */
     public function addColumn(Column $column, $row = null)
@@ -92,8 +95,8 @@ trait HasHeaderTrait
      * Get a column by name.
      *
      * @param string $name
-     *
      * @param null $row
+     *
      * @return Column|null
      */
     public function getColumn($name, $row = null)

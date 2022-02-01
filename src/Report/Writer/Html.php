@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Writer;
 
 /**
- * Class Html
- * @package ByTIC\ReportGenerator\Report\Writer
+ * Class Html.
  */
 class Html extends AbstractWriter implements WriterInterface
 {
-
     /**
      * Save to file or stream.
      *
@@ -17,6 +17,7 @@ class Html extends AbstractWriter implements WriterInterface
     public function getContent()
     {
         $response = $this->generateResponse();
+
         return $response->getContent();
     }
 
@@ -27,25 +28,25 @@ class Html extends AbstractWriter implements WriterInterface
      */
     public function save($name)
     {
-        // TODO: Implement save() method.
     }
 
     /**
      * @return string
      */
-    protected function getFileExtension()
+    protected function getFileExtension(): string
     {
-        // TODO: Implement getFileExtension() method.
+        return '.html';
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function generateResponseContent($response)
     {
         $response->setContent(
             $this->generateHtml()
         );
+
         return $response;
     }
 
@@ -56,6 +57,7 @@ class Html extends AbstractWriter implements WriterInterface
     {
         ob_start();
         require __DIR__ . '/HtmlWriter/resources/table.php';
+
         return ob_get_clean();
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Header\Traits;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
@@ -7,8 +9,7 @@ use ByTIC\ReportGenerator\Report\Definition\Columns\ColumnsCollection;
 use ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn;
 
 /**
- * Trait HasColumnsTrait
- * @package ByTIC\ReportGenerator\Report\Definition\Header\Traits
+ * Trait HasColumnsTrait.
  */
 trait HasColumnsTrait
 {
@@ -16,8 +17,8 @@ trait HasColumnsTrait
      * Set the column definitions.
      *
      * @param Column[] $columns
-     *
      * @param null $row
+     *
      * @return $this
      */
     public function setColumns(array $columns = [], $row = null)
@@ -27,6 +28,7 @@ trait HasColumnsTrait
 
     /**
      * @param null $row
+     *
      * @return ColumnsCollection
      */
     public function getColumns($row = null)
@@ -39,6 +41,7 @@ trait HasColumnsTrait
      *
      * @param string $name
      * @param string|null $title
+     *
      * @return $this
      */
     public function addColumnSimple($name, $title = null, $row = null)
@@ -50,6 +53,7 @@ trait HasColumnsTrait
      * Add a column.
      *
      * @param $array
+     *
      * @return $this
      */
     public function addColumnFromArray($array, $row = null)
@@ -60,8 +64,6 @@ trait HasColumnsTrait
     /**
      * Add a column.
      *
-     * @param Column $column
-     *
      * @return $this
      */
     public function addColumn(Column $column, $row = null)
@@ -69,22 +71,25 @@ trait HasColumnsTrait
         if ($column instanceof MultiColumn) {
             return $this->addMultiColumn($column, $row);
         }
+
         return $this->getRow($row)->addColumn($column);
     }
 
     /**
      * @param Column $column
      * @param null $row
+     *
      * @return
      */
     protected function addMultiColumn(MultiColumn $column, $row = null)
     {
-        $currentRow = $row === null ? 0 : $row;
+        $currentRow = null === $row ? 0 : $row;
 
         $children = $column->getChildren();
         foreach ($children as $child) {
             $this->addColumn($child, $currentRow + 1);
         }
+
         return $this->getRow($row)->addColumn($column);
     }
 

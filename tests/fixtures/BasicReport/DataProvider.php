@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Fixtures\BasicReport;
 
 use ByTIC\ReportGenerator\Report\DataProvider\AbstractDataProvider;
 use Generator;
 
 /**
- * Class DataProvider
- * @package ByTIC\ReportGenerator\Tests\Fixtures\BasicReport
+ * Class DataProvider.
  */
 class DataProvider extends AbstractDataProvider
 {
-
     /**
      * @return Generator
      */

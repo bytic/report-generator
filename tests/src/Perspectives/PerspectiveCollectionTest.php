@@ -1,25 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Perspectives;
 
 use ByTIC\ReportGenerator\Perspectives\Perspective;
 use ByTIC\ReportGenerator\Perspectives\PerspectiveCollection;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
+use Nip\Collections\Exceptions\InvalidTypeException;
+use stdClass;
 
 /**
- * Class PerspectiveCollectionTest
- * @package ByTIC\ReportGenerator\Tests\Perspectives
+ * Class PerspectiveCollectionTest.
  */
 class PerspectiveCollectionTest extends AbstractTest
 {
-    public function test_accepts_only_perspectives()
+    public function testAcceptsOnlyPerspectives()
     {
         $collection = new PerspectiveCollection();
-        static::expectException(\Nip\Collections\Exceptions\InvalidTypeException::class);
-        $collection->add(new \stdClass());
+        static::expectException(InvalidTypeException::class);
+        $collection->add(new stdClass());
     }
 
-    public function test_key_by_name()
+    public function testKeyByName()
     {
         $perspective = new Perspective();
         $perspective->setName('test');

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Columns;
 
 use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 
 /**
- * Class Column
- * @package ByTIC\ReportGenerator\Report\Definition\Columns
+ * Class Column.
  */
 class Column
 {
@@ -27,12 +28,13 @@ class Column
     protected $title;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $isHidden = true;
 
     /**
      * Column constructor.
+     *
      * @param array $params
      */
     public function __construct($params = [])
@@ -40,60 +42,40 @@ class Column
         $this->setParams($params);
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    /**
-     * @param string $name
-     */
     public function prependName(string $name)
     {
         $this->name = $name . '.' . $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         if (empty($this->title)) {
             return $this->getName();
         }
+
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
     public function setTitle(string $title)
     {
         $this->title = $title;
     }
 
-    /**
-     * @return bool
-     */
     public function isHidden(): bool
     {
         return $this->isHidden;
     }
 
-    /**
-     * @param bool $isHidden
-     */
     public function setIsHidden(bool $isHidden)
     {
         $this->isHidden = $isHidden;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\DataProvider;
 
 use ByTIC\ReportGenerator\Report\DataProvider\Traits\HasDataRowsTrait;
@@ -7,8 +9,7 @@ use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 use Generator;
 
 /**
- * Class AbstractDataProvider
- * @package ByTIC\ReportGenerator\Report\DataProvider
+ * Class AbstractDataProvider.
  */
 abstract class AbstractDataProvider
 {
@@ -25,15 +26,13 @@ abstract class AbstractDataProvider
      */
     public function getData()
     {
-        if ($this->data === null) {
+        if (null === $this->data) {
             $this->initData();
         }
+
         return $this->data;
     }
 
-    /**
-     * @param Generator $data
-     */
     public function setData(Generator $data)
     {
         $this->data = $data;

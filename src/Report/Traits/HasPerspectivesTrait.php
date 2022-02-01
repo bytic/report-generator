@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Traits;
 
 use ByTIC\ReportGenerator\Perspectives\Perspective;
 use ByTIC\ReportGenerator\Perspectives\PerspectiveCollection;
 
 /**
- * Trait HasPerspectivesTrait
- * @package ByTIC\ReportGenerator\Report\Traits
+ * Trait HasPerspectivesTrait.
  */
 trait HasPerspectivesTrait
 {
@@ -23,9 +24,10 @@ trait HasPerspectivesTrait
      */
     public function getPerspectives()
     {
-        if ($this->perspectives === null) {
+        if (null === $this->perspectives) {
             $this->initPerspectives();
         }
+
         return $this->perspectives;
     }
 
@@ -38,7 +40,6 @@ trait HasPerspectivesTrait
     /**
      * @param $name
      * @param string $label
-     * @return Perspective
      */
     public function createPerspective($name, $label = ''): Perspective
     {
@@ -46,6 +47,7 @@ trait HasPerspectivesTrait
         $perspective->setName($name);
         $perspective->setLabel($label);
         $this->getPerspectives()->add($perspective);
+
         return $perspective;
     }
 
@@ -55,12 +57,11 @@ trait HasPerspectivesTrait
     }
 
     /**
-     * @param string|null $currentPerspective
      * @return Perspective
      */
     public function currentPerspective(string $currentPerspective = null)
     {
-        if ($currentPerspective !== null) {
+        if (null !== $currentPerspective) {
             $this->perspectiveCurrent = $currentPerspective;
         }
 
@@ -74,5 +75,4 @@ trait HasPerspectivesTrait
     {
         return $this->getPerspectives()->get($this->perspectiveCurrent);
     }
-
 }

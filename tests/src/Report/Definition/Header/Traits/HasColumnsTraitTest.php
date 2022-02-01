@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Tests\Report\Definition\Header\Traits;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn;
@@ -7,12 +9,10 @@ use ByTIC\ReportGenerator\Report\Definition\Header\Header;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 
 /**
- * Class HasColumnsTraitTest
- * @package ByTIC\ReportGenerator\Tests\Report\Definition\Header\Traits
+ * Class HasColumnsTraitTest.
  */
 class HasColumnsTraitTest extends AbstractTest
 {
-
     public function testMultiColumnAdd()
     {
         $header = new Header();
@@ -53,7 +53,7 @@ class HasColumnsTraitTest extends AbstractTest
                 'parent1.child11',
                 'parent1.child12',
                 'parent1.parent2.child21',
-                'parent1.parent2.child22'
+                'parent1.parent2.child22',
             ],
             $thirdRow->getColumnsNames()
         );

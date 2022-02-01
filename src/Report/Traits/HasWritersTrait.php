@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Traits;
 
 use ByTIC\ReportGenerator\Report\Writer\AbstractWriter;
 use ByTIC\ReportGenerator\Report\Writer\WriterFactory;
 
 /**
- * Trait HasWritersTrait
- * @package ByTIC\ReportGenerator\Report\Traits
+ * Trait HasWritersTrait.
  */
 trait HasWritersTrait
 {
@@ -25,6 +26,7 @@ trait HasWritersTrait
 
     /**
      * @param null $type
+     *
      * @return AbstractWriter
      */
     public function getWriter($type = null)
@@ -34,6 +36,7 @@ trait HasWritersTrait
         if (!isset($this->writers[$type])) {
             $this->initWriter($type);
         }
+
         return $this->writers[$type];
     }
 
@@ -42,9 +45,10 @@ trait HasWritersTrait
      */
     protected function checkRegisterCustomWriters()
     {
-        if ($this->customWriters === null) {
+        if (null === $this->customWriters) {
             $this->customWriters = $this->registerCustomWriters();
         }
+
         return $this->customWriters;
     }
 
@@ -67,6 +71,7 @@ trait HasWritersTrait
 
     /**
      * @param string $type
+     *
      * @return AbstractWriter
      */
     protected function generateWriter($type)
@@ -76,6 +81,7 @@ trait HasWritersTrait
 
     /**
      * @param null $type
+     *
      * @return null
      */
     public function checkWriterType($type = null)
@@ -86,16 +92,18 @@ trait HasWritersTrait
         if ($this->validWriterType($type)) {
             return $type;
         }
+
         return $this->getWriterType();
     }
 
     /**
      * @param string $type
+     *
      * @return bool
      */
     protected function validWriterType($type)
     {
-        return is_string($type) && strlen($type) != 1;
+        return is_string($type) && 1 != strlen($type);
     }
 
     /**
@@ -103,9 +111,10 @@ trait HasWritersTrait
      */
     public function getWriterType()
     {
-        if ($this->type === null) {
+        if (null === $this->type) {
             $this->initType();
         }
+
         return $this->type;
     }
 

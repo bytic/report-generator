@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Columns;
 
 use ArrayAccess;
@@ -7,8 +9,7 @@ use ArrayIterator;
 use IteratorAggregate;
 
 /**
- * Class ColumnsCollection
- * @package ByTIC\ReportGenerator\Report\Definition\Columns
+ * Class ColumnsCollection.
  */
 class ColumnsCollection implements IteratorAggregate, ArrayAccess
 {
@@ -32,6 +33,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
         foreach ($columns as $column) {
             $this->addColumn($column);
         }
+
         return $this;
     }
 
@@ -48,6 +50,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
      *
      * @param string $name
      * @param string|null $title
+     *
      * @return $this
      */
     public function addColumnSimple($name, $title = null)
@@ -59,6 +62,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
      * Add a column.
      *
      * @param $array
+     *
      * @return $this
      */
     public function addColumnFromArray($array)
@@ -69,13 +73,12 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
     /**
      * Add a column.
      *
-     * @param Column $column
-     *
      * @return $this
      */
     public function addColumn(Column $column)
     {
         $this->columns[$column->getName()] = $column;
+
         return $this;
     }
 
@@ -91,6 +94,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
         if (isset($this->columns[$name])) {
             return $this->columns[$name];
         }
+
         return null;
     }
 
@@ -110,9 +114,6 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
         return count($this->columns);
     }
 
-    /**
-     * @param ColumnsCollection $collection
-     */
     public function populateFromSibling(ColumnsCollection $collection)
     {
         $this->setColumns($collection->getColumns());
@@ -127,7 +128,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetExists($offset)
     {
@@ -135,7 +136,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetGet($offset)
     {
@@ -143,7 +144,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -151,7 +152,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetUnset($offset)
     {

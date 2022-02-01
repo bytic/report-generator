@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Traits;
 
 use ByTIC\ReportGenerator\Report\Definition\AbstractDefinition;
 use ByTIC\ReportGenerator\Report\Definition\Definition;
 
 /**
- * Trait HasDefinitionTrait
- * @package ByTIC\ReportGenerator\Report\Traits
+ * Trait HasDefinitionTrait.
  */
 trait HasDefinitionTrait
 {
@@ -24,9 +25,10 @@ trait HasDefinitionTrait
      */
     public function getDefinition()
     {
-        if ($this->definition === null) {
+        if (null === $this->definition) {
             $this->initDefinition();
         }
+
         return $this->definition;
     }
 
@@ -55,6 +57,7 @@ trait HasDefinitionTrait
         if (method_exists($this, 'getDefinitionClass')) {
             return $this->getDefinitionClass();
         }
+
         return Definition::class;
     }
 
@@ -67,17 +70,11 @@ trait HasDefinitionTrait
         $this->setDefined(true);
     }
 
-    /**
-     * @param bool $defined
-     */
     public function setDefined(bool $defined)
     {
         $this->defined = $defined;
     }
 
-    /**
-     * @return bool
-     */
     public function isDefined(): bool
     {
         return $this->defined;

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ByTIC\ReportGenerator\Report\Definition\Columns;
 
 use ByTIC\ReportGenerator\Report\Definition\Columns\MultiColumn\DescendentsCalculation;
 
 /**
- * Class Column
- * @package ByTIC\ReportGenerator\Report\Definition\Columns
+ * Class Column.
  */
 class MultiColumn extends Column
 {
@@ -37,6 +38,7 @@ class MultiColumn extends Column
      * Add a column.
      *
      * @param $array
+     *
      * @return $this
      */
     public function addChildFromArray($array)
@@ -59,17 +61,11 @@ class MultiColumn extends Column
         $this->calculateDescendantsCount();
     }
 
-    /**
-     * @return int
-     */
     public function getDescendantsCount(): int
     {
         return $this->descendantsCount;
     }
 
-    /**
-     * @param int $descendantsCount
-     */
     public function setDescendantsCount(int $descendantsCount)
     {
         $this->descendantsCount = $descendantsCount;
@@ -77,6 +73,7 @@ class MultiColumn extends Column
 
     /**
      * @param null $children
+     *
      * @return int|void
      */
     public function calculateDescendantsCount()
@@ -86,12 +83,14 @@ class MultiColumn extends Column
 
     /**
      * @param Column $column
+     *
      * @return bool
      */
     public function isFirstChild($column)
     {
         $keys = array_keys($this->children);
         $firstKey = reset($keys);
+
         return $column->getName() == $firstKey;
     }
 
