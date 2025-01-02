@@ -15,7 +15,7 @@ class Report extends AbstractReport implements ReportInterface
     /**
      * Method for setting up the report definition.
      */
-    protected function define()
+    protected function define(): void
     {
         $this->getDefinition()
             ->setTitle('Total Report');

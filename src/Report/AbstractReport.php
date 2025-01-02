@@ -55,7 +55,7 @@ abstract class AbstractReport
     {
         $this->run();
 
-        return $this->getDefinition()->getHeader();
+        return $this->getDefinition()->getHeader(null, true);
     }
 
     public function isReady(): bool

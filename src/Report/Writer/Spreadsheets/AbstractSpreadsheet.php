@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ByTIC\ReportGenerator\Report\Writer;
+namespace ByTIC\ReportGenerator\Report\Writer\Spreadsheets;
 
 use ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow;
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use ByTIC\ReportGenerator\Report\Definition\Header\Header;
+use ByTIC\ReportGenerator\Report\Writer\AbstractWriter;
+use ByTIC\ReportGenerator\Report\Writer\WriterInterface;
 use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetWriterFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -29,13 +32,6 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
      * @var Spreadsheet
      */
     protected $spreadsheet = null;
-
-    /**
-     * Current row number in report.
-     *
-     * @var int
-     */
-    protected $currentRow = 1;
 
     /**
      * Save to file.
@@ -72,7 +68,11 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
      */
     protected function initWriter()
     {
-        $this->writer = SpreadsheetWriterFactory::createWriter($this->getSpreadsheet(), $this->writerType);
+        $this->writer = SpreadsheetWriterFactory
+            ::createWriter(
+                $this->getSpreadsheet(),
+                $this->writerType
+            );
     }
 
     /**
@@ -98,29 +98,52 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
     {
         $spreadsheet = new Spreadsheet();
 
-        $data = $this->report->getData();
-
+        $title = $this->report->getDefinition()->getTitle();
         $spreadsheet->getProperties()
-            ->setTitle($this->report->getDefinition()->getTitle())
-            ->setSubject($this->report->getDefinition()->getTitle());
+            ->setTitle($title)
+            ->setSubject($title);
 
-        $header = $this->report->getHeader();
-        $this->addHeader($spreadsheet, $this->report->getHeader());
-
-        foreach ($data as $rowData) {
-            $this->addRow($spreadsheet, $rowData, $header);
-        }
-
-        $lastCol = $spreadsheet->getActiveSheet()->getHighestColumn();
-        $spreadsheet->getActiveSheet()->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->freezePane('A2');
-
-        foreach (range('A', $lastCol) as $col) {
-            $spreadsheet->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
-        }
+        $this->generateWorksheets($spreadsheet);
+        $this->styleWorksheets($spreadsheet);
 
         return $spreadsheet;
     }
+
+    protected function generateWorksheets(Spreadsheet $spreadsheet)
+    {
+        $this->generateWorksheetHeaders($spreadsheet);
+        $this->generateWorksheetData($spreadsheet);
+    }
+
+    protected function styleWorksheets(Spreadsheet $spreadsheet): void
+    {
+        $sheets = $spreadsheet->getAllSheets();
+        foreach ($sheets as $sheet) {
+            $this->styleWorksheet($sheet);
+        }
+    }
+
+    protected function styleWorksheet(Worksheet $spreadsheet): void
+    {
+        $lastCol = $spreadsheet->getHighestColumn();
+        $spreadsheet->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);
+        $spreadsheet->freezePane('A2');
+
+        foreach (range('A', $lastCol) as $col) {
+            $spreadsheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    protected function generateWorksheetHeaders(Spreadsheet $spreadsheet)
+    {
+        $definition = $this->report->getDefinition();
+        $headers = $definition->getHeaders();
+        foreach ($headers as $key => $header) {
+            $sheet = $this->getSheetFromKey($spreadsheet, $key);
+            $this->addHeader($sheet, $this->report->getHeader());
+        }
+    }
+
 
     /**
      * Add a row of values to the current worksheet.
@@ -131,19 +154,32 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function addHeader(Spreadsheet $spreadsheet, Header $header)
+    protected function addHeader(Worksheet $sheet, Header $header): static
     {
-        $sheet = $spreadsheet->getActiveSheet();
+        $currentRow = $sheet->getHighestRow() + 1;
         foreach ($header as $headerRow) {
             $col = 'A';
             foreach ($headerRow as $column) {
-                $sheet->setCellValue($col . $this->currentRow, $column->getTitle());
+                $sheet->setCellValue($col . $currentRow, $column->getTitle());
                 ++$col;
             }
-            ++$this->currentRow;
         }
 
         return $this;
+    }
+
+    protected function generateWorksheetData(Spreadsheet $spreadsheet)
+    {
+        $data = $this->report->getData();
+
+        foreach ($data as $rowData) {
+            /** @var DataRow $rowData */
+            $chapter = $rowData->getChapter();
+            $key = $chapter?->getName();
+            $header = $this->report->getHeader($key);
+            $sheet = $this->getSheetFromKey($spreadsheet, $key);
+            $this->addRow($sheet, $rowData, $header);
+        }
     }
 
     /**
@@ -153,16 +189,15 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function addRow(Spreadsheet $spreadsheet, DataRow $row, Header $header)
+    protected function addRow(Worksheet $sheet, DataRow $row, Header $header)
     {
-        $sheet = $spreadsheet->getActiveSheet();
+        $currentRow = $sheet->getHighestRow() + 1;
         $col = 'A';
         $lastHeaderRow = $header->getLastRow();
         foreach ($lastHeaderRow as $column) {
-            $sheet->setCellValue($col . $this->currentRow, $row->getValue($column->getName()));
+            $sheet->setCellValue($col . $currentRow, $row->getValue($column->getName()));
             ++$col;
         }
-        ++$this->currentRow;
 
         return $this;
     }
@@ -190,4 +225,29 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
     abstract protected function getResponseContentHeader(): string;
 
     abstract protected function getFileExtension(): string;
+
+    /**
+     * @param Spreadsheet $spreadsheet
+     * @param int|string|null $key
+     * @return Worksheet
+     */
+    protected function getSheetFromKey(Spreadsheet $spreadsheet, int|string|null $key)
+    {
+        if ($key === null) {
+            return $spreadsheet->getActiveSheet();
+        }
+
+        $chapter = $this->report->getDefinition()->getOrCreateChapter($key);
+        $sheet = $spreadsheet->getSheetByCodeName($chapter->getName());
+        if ($sheet) {
+            return $sheet;
+        }
+
+        $sheet = $spreadsheet->createSheet();
+        $sheet->setCodeName($chapter->getName());
+        $sheet->setTitle($chapter->getLabel());
+
+        return $sheet;
+    }
+
 }

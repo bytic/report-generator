@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ByTIC\ReportGenerator\Report\Traits;
+namespace ByTIC\ReportGenerator\ReportChapters\Related;
 
 use ByTIC\ReportGenerator\ReportChapters\ReportChapter;
 use ByTIC\ReportGenerator\ReportChapters\ReportChaptersCollection;
@@ -21,12 +21,27 @@ trait HasChaptersTrait
 
     /**
      * @param $name
+     * @param $label
+     * @return ReportChapter
+     */
+    public function getOrCreateChapter($name, $label = ''): ReportChapter
+    {
+        if (!$this->getChapters()->has($name)) {
+            return $this->createChapter($name, $label);
+        }
+        return $this->getChapters()->get($name);
+    }
+
+    /**
+     * @param $name
      * @param string $label
      */
-    public function createChapter($name, $label = ''): ReportChapter
+    public function createChapter($name, $label = null): ReportChapter
     {
         $item = new ReportChapter();
         $item->setName($name);
+
+        $label = empty($label) ? $name : $label;
         $item->setLabel($label);
         $this->getChapters()->add($item);
 

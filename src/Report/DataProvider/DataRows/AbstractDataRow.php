@@ -6,6 +6,7 @@ namespace ByTIC\ReportGenerator\Report\DataProvider\DataRows;
 
 use ArrayAccess;
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
+use ByTIC\ReportGenerator\ReportChapters\ReportChapter;
 use Nip\Collections\Traits\AccessMethodsTrait;
 use Nip\Collections\Traits\ArrayAccessTrait;
 use Nip\Collections\Traits\OperationsOnItemsTrait;
@@ -25,6 +26,8 @@ abstract class AbstractDataRow implements ArrayAccess
     protected $items = [];
     protected $index = 0;
 
+    protected $chapter = null;
+
     /**
      * Collection constructor.
      *
@@ -36,6 +39,10 @@ abstract class AbstractDataRow implements ArrayAccess
             $this->items = $items;
         } elseif (method_exists($items, 'toArray')) {
             $this->items = $items->toArray();
+        }
+        if (key_exists('chapter', $this->items)) {
+            $this->chapter = $this->items['chapter'];
+            unset($this->items['chapter']);
         }
     }
 
@@ -71,6 +78,14 @@ abstract class AbstractDataRow implements ArrayAccess
         $column = $this->keyForColumn($column);
         /* @noinspection PhpUnhandledExceptionInspection */
         $this->valueAdd($column, $value);
+    }
+
+    /**
+     * @return ReportChapter|null
+     */
+    public function getChapter(): ?ReportChapter
+    {
+        return $this->chapter;
     }
 
     /**

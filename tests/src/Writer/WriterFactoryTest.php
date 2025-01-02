@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ByTIC\ReportGenerator\Tests\Writer;
 
-use ByTIC\ReportGenerator\Report\Writer\AbstractSpreadsheet;
 use ByTIC\ReportGenerator\Report\Writer\Html;
+use ByTIC\ReportGenerator\Report\Writer\Spreadsheets\AbstractSpreadsheet;
 use ByTIC\ReportGenerator\Report\Writer\WriterFactory;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 use ByTIC\ReportGenerator\Tests\Fixtures\BasicReport\Report;

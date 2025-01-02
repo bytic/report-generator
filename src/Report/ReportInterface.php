@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ByTIC\ReportGenerator\Report;
 
+use ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow;
 use ByTIC\ReportGenerator\Report\Definition\AbstractDefinition as Definition;
 use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use ByTIC\ReportGenerator\Report\Definition\Header\Header;
@@ -25,7 +26,7 @@ interface ReportInterface
     public function getHeader();
 
     /**
-     * @return Generator
+     * @return Generator|DataRow[]
      */
     public function getData();
 }

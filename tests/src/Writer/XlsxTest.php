@@ -16,6 +16,8 @@ class XlsxTest extends AbstractTest
     public function testRender()
     {
         $report = new Report();
+        $report->run();
+
         $writer = new Xlsx($report);
 
         $fixtureFile = TEST_FIXTURE_PATH . '/files/xlsx-simple.xlsx';

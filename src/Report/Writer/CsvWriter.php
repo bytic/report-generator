@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ByTIC\ReportGenerator\Report\Writer;
 
+use ByTIC\ReportGenerator\Report\Writer\Spreadsheets\AbstractSpreadsheet;
+
 /**
  * Class Html.
  */

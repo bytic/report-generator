@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ByTIC\ReportGenerator\Report\Traits;
 
 use ByTIC\ReportGenerator\Report\DataProvider\AbstractDataProvider;
+use ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow;
 use Generator;
 use ReflectionClass;
 use ReflectionException;
@@ -24,7 +25,7 @@ trait HasDataProvider
     protected $dataProvider = null;
 
     /**
-     * @return Generator
+     * @return Generator|DataRow[]
      */
     public function getData()
     {

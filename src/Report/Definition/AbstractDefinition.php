@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ByTIC\ReportGenerator\Report\Definition;
 
-use ByTIC\ReportGenerator\Report\Definition\Traits\HasHeaderTrait;
+use ByTIC\ReportGenerator\ReportChapters\Related\HasChaptersTrait;
+use ByTIC\ReportGenerator\ReportHeaders\Related\HasHeadersTrait;
 use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 
 /**
@@ -13,7 +14,9 @@ use ByTIC\ReportGenerator\Utility\Traits\HasParamsTrait;
 abstract class AbstractDefinition
 {
     use HasParamsTrait;
-    use HasHeaderTrait;
+    use HasHeadersTrait;
+    use HasChaptersTrait;
+    use Traits\HasFilename;
 
     /**
      * The report title.
@@ -22,19 +25,12 @@ abstract class AbstractDefinition
      */
     protected $title;
 
-    /**
-     * The file name.
-     *
-     * @var string
-     */
-    protected $fileName;
 
     /**
      * AbstractDefinition constructor.
      */
     public function __construct()
     {
-        $this->initHeader();
     }
 
     /**
@@ -57,19 +53,4 @@ abstract class AbstractDefinition
         return $this->title;
     }
 
-    /**
-     * @return string
-     */
-    public function getFileName()
-    {
-        return $this->fileName;
-    }
-
-    /**
-     * @param string $fileName
-     */
-    public function setFileName($fileName)
-    {
-        $this->fileName = $fileName;
-    }
 }
