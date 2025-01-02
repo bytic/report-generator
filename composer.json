@@ -36,5 +36,13 @@
       "ByTIC\\ReportGenerator\\Tests\\": "tests/src",
       "ByTIC\\ReportGenerator\\Tests\\Fixtures\\": "tests/fixtures"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "ergebnis/composer-normalize": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "bytic/phpqatools": true
+    }
   }
 }

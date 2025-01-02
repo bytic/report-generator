@@ -21,7 +21,8 @@ class HasDataRowsTraitTest extends AbstractTest
         $firstRow = $data->current();
 
         self::assertInstanceOf(Generator::class, $data);
-        self::assertCount(2, $data);
+        $dataArray = iterator_to_array($data);
+        self::assertCount(2, $dataArray);
 
         self::assertInstanceOf(DataRow::class, $firstRow);
         self::assertSame(2016, $firstRow->getValue('year'));

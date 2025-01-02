@@ -6,6 +6,17 @@ Use [composer](https://getcomposer.org) to install PhpSpreadsheet into your proj
 composer require bytic/report-generator
 ```
 
+## Concepts
+
+#### Perspectives
+
+Used to do different filters to run the same report with different data.
+
+#### ReportChapters
+
+Used to create different sections in the report.
+Each chapter can have different Headers.
+
 ## Simple Usage
 
 This would be the simplest way to generate a report:
