@@ -13,33 +13,17 @@ trait CanRenderTrait
 {
     public function render()
     {
-        $response = $this->generateResponse();
+        $response = $this->getResponse();
         $response->send();
         exit();
     }
 
-    /**
-     * @return Response
-     */
-    protected function generateResponse()
+    protected function generateResponseHeaders(Response $response)
     {
-        $response = new Response();
-
-        $response = $this->generateResponseContent($response);
-
         $response->headers->set('Cache-Control', 'public');
         $response->headers->set(
             'Content-Disposition',
             'attachment; filename="' . $this->getFileName() . '"'
         );
-
-        return $response;
     }
-
-    /**
-     * @param $response
-     *
-     * @return Response
-     */
-    abstract protected function generateResponseContent($response);
 }

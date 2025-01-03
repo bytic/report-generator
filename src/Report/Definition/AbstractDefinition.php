@@ -23,7 +23,7 @@ abstract class AbstractDefinition
      *
      * @var string
      */
-    protected $title;
+    protected $title = null;
 
 
     /**
@@ -50,7 +50,7 @@ abstract class AbstractDefinition
      */
     public function getTitle()
     {
-        return $this->title;
+        return $this->title ?? 'Report';
     }
 
 }

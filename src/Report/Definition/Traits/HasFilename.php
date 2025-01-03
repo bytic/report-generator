@@ -14,14 +14,14 @@ trait HasFilename
      *
      * @var string
      */
-    protected $fileName;
+    protected $fileName = null;
 
     /**
      * @return string
      */
     public function getFileName()
     {
-        return $this->fileName;
+        return $this->fileName ?? $this->getTitle();
     }
 
     /**
