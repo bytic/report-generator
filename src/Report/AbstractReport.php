@@ -51,11 +51,11 @@ abstract class AbstractReport
      *
      * @return Column[]|Definition\Header\Header
      */
-    public function getHeader()
+    public function getHeader($key = null, $autoInit = false)
     {
         $this->run();
 
-        return $this->getDefinition()->getHeader(null, true);
+        return $this->getDefinition()->getHeader($key, $autoInit);
     }
 
     public function isReady(): bool

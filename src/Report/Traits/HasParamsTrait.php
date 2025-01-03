@@ -26,7 +26,7 @@ trait HasParamsTrait
     {
         $params = $this->getParams();
         $params['perspective'] = $this->currentPerspective();
-
+        $params['chapters'] = $this->getDefinition()->getChapters();
         return $params;
     }
 }

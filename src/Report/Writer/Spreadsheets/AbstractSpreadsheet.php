@@ -14,6 +14,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -140,7 +141,7 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
         $headers = $definition->getHeaders();
         foreach ($headers as $key => $header) {
             $sheet = $this->getSheetFromKey($spreadsheet, $key);
-            $this->addHeader($sheet, $this->report->getHeader());
+            $this->addHeader($sheet, $header);
         }
     }
 
@@ -156,7 +157,7 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
      */
     protected function addHeader(Worksheet $sheet, Header $header): static
     {
-        $currentRow = $sheet->getHighestRow() + 1;
+        $currentRow = $sheet->getHighestRow();
         foreach ($header as $headerRow) {
             $col = 'A';
             foreach ($headerRow as $column) {
@@ -208,7 +209,7 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws Exception
      */
-    protected function generateResponseContent($response)
+    protected function generateResponseContent($response): Response
     {
         $writer = $this->getWriter();
 

@@ -16,6 +16,9 @@ trait HasResponseTrait
 
     public function getResponse(): ?Response
     {
+        if ($this->response === null) {
+            $this->response = $this->generateResponse();
+        }
         return $this->response;
     }
 
@@ -47,11 +50,11 @@ trait HasResponseTrait
      *
      * @return Response
      */
-    abstract protected function generateResponseContent(Response $response);
+    abstract protected function generateResponseContent(Response $response): Response;
 
     /**
      * @param $response
      * @return mixed
      */
-    abstract protected function generateResponseHeaders(Response $response);
+    abstract protected function generateResponseHeaders(Response $response): Response;
 }

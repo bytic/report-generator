@@ -18,12 +18,14 @@ trait CanRenderTrait
         exit();
     }
 
-    protected function generateResponseHeaders(Response $response)
+    protected function generateResponseHeaders(Response $response): Response
     {
         $response->headers->set('Cache-Control', 'public');
         $response->headers->set(
             'Content-Disposition',
             'attachment; filename="' . $this->getFileName() . '"'
         );
+
+        return $response;
     }
 }

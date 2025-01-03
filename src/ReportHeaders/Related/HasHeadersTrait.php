@@ -32,7 +32,7 @@ trait HasHeadersTrait
      * @param null $key
      * @return Header
      */
-    public function getHeader($key = null, $autoInit = false): Header
+    public function getHeader($key = null, $autoInit = false): ?Header
     {
         $key = $this->checkHeaderKey($key);
         $headers = $this->getHeaders();
