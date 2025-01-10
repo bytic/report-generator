@@ -4,21 +4,14 @@ declare(strict_types=1);
 
 namespace ByTIC\ReportGenerator\Report\Definition\Columns;
 
-use ArrayAccess;
-use ArrayIterator;
-use IteratorAggregate;
+use Nip\Collections\Typed\ClassCollection;
 
 /**
  * Class ColumnsCollection.
  */
-class ColumnsCollection implements IteratorAggregate, ArrayAccess
+class ColumnsCollection extends ClassCollection
 {
-    /**
-     * Column definitions.
-     *
-     * @var Column[]
-     */
-    protected $columns = [];
+    protected $validClass = Column::class;
 
     /**
      * Set the column definitions.
@@ -29,7 +22,7 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
      */
     public function setColumns(array $columns = [])
     {
-        $this->columns = [];
+        $this->clear();
         foreach ($columns as $column) {
             $this->addColumn($column);
         }
@@ -40,9 +33,9 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
     /**
      * @return Column[]
      */
-    public function getColumns()
+    public function getColumns(): array
     {
-        return $this->columns;
+        return $this->items;
     }
 
     /**
@@ -75,9 +68,9 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
      *
      * @return $this
      */
-    public function addColumn(Column $column)
+    public function addColumn(Column $column): static
     {
-        $this->columns[$column->getName()] = $column;
+        $this->add($column, $column->getName());
 
         return $this;
     }
@@ -91,77 +84,27 @@ class ColumnsCollection implements IteratorAggregate, ArrayAccess
      */
     public function getColumn($name)
     {
-        if (isset($this->columns[$name])) {
-            return $this->columns[$name];
-        }
-
-        return null;
+        return $this->get($name);
     }
 
     /**
      * @return array
      */
-    public function getColumnsNames()
+    public function getColumnsNames(): array
     {
-        return array_keys($this->columns);
+        return $this->keys();
     }
 
     /**
      * @return int
      */
-    public function columnsCount()
+    public function columnsCount(): int
     {
-        return count($this->columns);
+        return $this->count();
     }
 
     public function populateFromSibling(ColumnsCollection $collection)
     {
         $this->setColumns($collection->getColumns());
-    }
-
-    /**
-     * @return ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new ArrayIterator($this->columns);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->columns[$offset]) || array_key_exists($offset, $this->columns);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetGet($offset)
-    {
-        return array_key_exists($offset, $this->columns) ? $this->columns[$offset] : null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->columns[$offset] = $value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetUnset($offset)
-    {
-        if (!isset($this->items[$offset]) && !array_key_exists($offset, $this->columns)) {
-            return null;
-        }
-        $removed = $this->columns[$offset];
-        unset($this->columns[$offset]);
-
-        return $removed;
     }
 }

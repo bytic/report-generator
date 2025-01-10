@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ByTIC\ReportGenerator\Report\Definition\Header\Traits;
 
 use ArrayIterator;
+use Traversable;
 
 /**
  * Trait ArrayMethodsTrait.
@@ -14,7 +15,7 @@ trait ArrayMethodsTrait
     /**
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->rows);
     }
@@ -22,7 +23,7 @@ trait ArrayMethodsTrait
     /**
      * {@inheritDoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->rows[$offset]) || array_key_exists($offset, $this->rows);
     }
@@ -30,7 +31,7 @@ trait ArrayMethodsTrait
     /**
      * {@inheritDoc}
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return array_key_exists($offset, $this->rows) ? $this->rows[$offset] : null;
     }
@@ -38,7 +39,7 @@ trait ArrayMethodsTrait
     /**
      * {@inheritDoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->rows[$offset] = $value;
     }
@@ -46,14 +47,12 @@ trait ArrayMethodsTrait
     /**
      * {@inheritDoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (!isset($this->rows[$offset]) && !array_key_exists($offset, $this->rows)) {
-            return null;
+            return;
         }
         $removed = $this->rows[$offset];
         unset($this->rows[$offset]);
-
-        return $removed;
     }
 }

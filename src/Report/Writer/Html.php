@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ByTIC\ReportGenerator\Report\Writer;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Class Html.
  */
@@ -41,7 +43,7 @@ class Html extends AbstractWriter implements WriterInterface
     /**
      * {@inheritDoc}
      */
-    protected function generateResponseContent($response)
+    protected function generateResponseContent(Response $response): Response
     {
         $response->setContent(
             $this->generateHtml()

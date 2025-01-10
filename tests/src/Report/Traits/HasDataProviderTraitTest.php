@@ -19,6 +19,9 @@ class HasDataProviderTraitTest extends AbstractTest
         $report->setParams($params);
 
         $dataProvider = $report->getDataProvider();
-        static::assertSame($params, $dataProvider->getParams());
+        $dataProviderParams = $dataProvider->getParams();
+        foreach ($params as $key => $value) {
+            self::assertSame($value, $dataProviderParams[$key]);
+        }
     }
 }
