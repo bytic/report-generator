@@ -9,6 +9,7 @@ use ByTIC\ReportGenerator\Report\Definition\Columns\Column;
 use ByTIC\ReportGenerator\Report\Definition\Header\Header;
 use ByTIC\ReportGenerator\Report\Writer\AbstractWriter;
 use ByTIC\ReportGenerator\Report\Writer\WriterInterface;
+use ByTIC\ReportGenerator\ReportHeaders\HeaderCollection;
 use Nip\Utility\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetWriterFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -239,6 +240,7 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
             return $spreadsheet->getActiveSheet();
         }
 
+        $key = (string)$key == HeaderCollection::DEFAULT_HEADER ? 'Worksheet' : $key;
         $chapter = $this->report->getDefinition()->getOrCreateChapter($key);
         $sheet = $spreadsheet->getSheetByCodeName($chapter->getName());
         if ($sheet) {

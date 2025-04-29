@@ -127,7 +127,6 @@ trait HasHeadersTrait
      */
     protected function checkHeaderKey($key = null)
     {
-        return $key ?? 'default';
+        return $key ?? HeaderCollection::DEFAULT_HEADER;
     }
-
 }

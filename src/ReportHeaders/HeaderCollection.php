@@ -14,6 +14,8 @@ class HeaderCollection extends ClassCollection
 {
     protected $validClass = Header::class;
 
+    public const DEFAULT_HEADER = 'default';
+
     /**
      * {@inheritDoc}
      */
