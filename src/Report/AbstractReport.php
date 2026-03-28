@@ -41,6 +41,24 @@ abstract class AbstractReport
         $this->generateData();
     }
 
+    /**
+     * Pre-load report data from an array of pre-fetched rows.
+     *
+     * This bypasses the DataProvider and is used by the chunked generation
+     * pipeline ({@see \ByTIC\ReportGenerator\AsyncReport\ReportJobRunner})
+     * to inject accumulated rows at finalisation time.
+     *
+     * @param \ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow[] $rows
+     */
+    public function preloadData(array $rows): void
+    {
+        $this->validateDefinition();
+        $this->data = (static function () use ($rows): \Generator {
+            yield from $rows;
+        })();
+        $this->setReady(true);
+    }
+
     public function render()
     {
         $this->getWriter()->render();
