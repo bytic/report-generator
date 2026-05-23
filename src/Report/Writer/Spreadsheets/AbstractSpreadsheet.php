@@ -10,7 +10,7 @@ use ByTIC\ReportGenerator\Report\Definition\Header\Header;
 use ByTIC\ReportGenerator\Report\Writer\AbstractWriter;
 use ByTIC\ReportGenerator\Report\Writer\WriterInterface;
 use ByTIC\ReportGenerator\ReportHeaders\HeaderCollection;
-use Nip\Utility\Str;
+use ByTIC\ReportGenerator\Utility\PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetWriterFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -250,21 +250,9 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
         $sheet = $spreadsheet->createSheet();
         $sheet->setCodeName($chapter->getName());
         $sheet->setTitle(
-            $this->generateSheetName($chapter->getLabel())
+            PhpSpreadsheet::cleanSheetName($chapter->getLabel())
         );
 
         return $sheet;
-    }
-
-    /**
-     * @param $name
-     * @return string
-     */
-    protected function generateSheetName($name): string
-    {
-        $name = html_entity_decode($name);
-        $name = Str::ascii($name);
-        $name = substr($name, 0, 30);
-        return $name;
     }
 }

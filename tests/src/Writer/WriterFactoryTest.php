@@ -9,6 +9,8 @@ use ByTIC\ReportGenerator\Report\Writer\Spreadsheets\AbstractSpreadsheet;
 use ByTIC\ReportGenerator\Report\Writer\WriterFactory;
 use ByTIC\ReportGenerator\Tests\AbstractTest;
 use ByTIC\ReportGenerator\Tests\Fixtures\BasicReport\Report;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Class WriterFactoryTest.
@@ -16,11 +18,11 @@ use ByTIC\ReportGenerator\Tests\Fixtures\BasicReport\Report;
 class WriterFactoryTest extends AbstractTest
 {
     /**
-     * @dataProvider dataCreateWriter
-     *
      * @param string $type
      * @param string $writerClass
      */
+    #[Test]
+    #[DataProvider('dataCreateWriter')]
     public static function testCreateWriter($type, $writerClass)
     {
         $report = new Report();

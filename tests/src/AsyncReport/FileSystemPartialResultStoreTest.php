@@ -6,6 +6,7 @@ namespace ByTIC\ReportGenerator\Tests\AsyncReport;
 
 use ByTIC\ReportGenerator\AsyncReport\Storage\FileSystemPartialResultStore;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @covers \ByTIC\ReportGenerator\AsyncReport\Storage\FileSystemPartialResultStore
@@ -64,7 +65,7 @@ class FileSystemPartialResultStoreTest extends TestCase
     public function test_append_and_retrieve_single_chunk(): void
     {
         $jobId = 'test-job-single';
-        $rows = [new \stdClass(), new \stdClass()];
+        $rows = [new stdClass(), new stdClass()];
         $rows[0]->name = 'Alice';
         $rows[1]->name = 'Bob';
 
@@ -114,7 +115,7 @@ class FileSystemPartialResultStoreTest extends TestCase
 
         $this->store->cleanup($jobId);
 
-        self::assertDirectoryNotExists($this->tmpDir . '/' . $jobId);
+        self::assertDirectoryDoesNotExist($this->tmpDir . '/' . $jobId);
     }
 
     public function test_cleanup_is_safe_for_non_existent_job(): void
