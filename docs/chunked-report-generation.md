@@ -64,6 +64,14 @@ the countdown. The file is fetched into a browser Blob so the Download button
 still works after the server cleans up the report; this uses browser storage or
 memory for the completed file until the page is left.
 
+Each new export has its own random job ID and isolated chunk storage, even when
+the same user or multiple users export identical reports. Output files are
+reserved exclusively under unique server-side paths, so exports cannot overwrite
+each other's completed files. The browser download still uses the report's
+configured filename (or title) plus the format extension; that display name is
+not used as a server-side storage path. Processing an already completed job is
+a no-op.
+
 ### Event-scoped URLs
 
 Progress and download URLs are generated automatically with

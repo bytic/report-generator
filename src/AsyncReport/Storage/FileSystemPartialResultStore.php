@@ -35,7 +35,7 @@ class FileSystemPartialResultStore implements PartialResultStoreInterface
     public function initJob(string $jobId): void
     {
         $dir = $this->jobDir($jobId);
-        if (!is_dir($dir) && !mkdir($dir, 0700, true) && !is_dir($dir)) {
+        if (!is_dir($dir) && !@mkdir($dir, 0700, true) && !is_dir($dir)) {
             throw new RuntimeException("Cannot create job directory: {$dir}");
         }
     }

@@ -39,6 +39,7 @@ class ContinuationTokenTest extends TestCase
         self::assertSame($state->totalRows, $decoded->totalRows);
         self::assertSame($state->status, $decoded->status);
         self::assertSame($state->params, $decoded->params);
+        self::assertSame($state->outputFilename, $decoded->outputFilename);
     }
 
     public function test_decode_throws_on_wrong_secret(): void
@@ -89,6 +90,7 @@ class ContinuationTokenTest extends TestCase
             'xlsx',
             200,
         );
+        $state->outputFilename = 'Sales Report.xlsx';
 
         $token = ContinuationToken::encode($state, self::SECRET);
         $decoded = ContinuationToken::decode($token, self::SECRET);
@@ -96,6 +98,7 @@ class ContinuationTokenTest extends TestCase
         self::assertSame(2024, $decoded->params['year']);
         self::assertSame('EU', $decoded->params['region']);
         self::assertSame(200, $decoded->chunkSize);
+        self::assertSame('Sales Report.xlsx', $decoded->outputFilename);
     }
 
     // -------------------------------------------------------------------------
