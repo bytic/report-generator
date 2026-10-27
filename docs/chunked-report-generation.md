@@ -1,5 +1,91 @@
 # Chunked / Multi-Request Report Generation
 
+## Controller Examples
+
+Use `HasReportGeneratorControllerTrait` to start different reports from explicit
+controller actions. All exports share the trait's `reportProgress` and
+`reportDownload` endpoints; the signed continuation token carries each job's
+report class, parameters, format, and chunk size.
+
+```php
+use App\Reports\CustomersReport;
+use App\Reports\OrdersReport;
+use ByTIC\ReportGenerator\Bundle\Admin\Controllers\HasReportGeneratorControllerTrait;
+
+class ReportsController extends \Nip\Controllers\Controller
+{
+    use HasReportGeneratorControllerTrait;
+
+    public function exportOrders(): void
+    {
+        // Authorize this export and validate the filters before starting.
+        $this->startChunkedReport(
+            OrdersReport::class,
+            ['year' => (int) $this->getRequest()->get('year')],
+            format: 'xlsx',
+        );
+    }
+
+    public function exportCustomers(): void
+    {
+        // Authorize this export before starting.
+        $this->startChunkedReport(
+            CustomersReport::class,
+            ['active' => true],
+            format: 'csv',
+            chunkSize: 200,
+        );
+    }
+
+    protected function getChunkedReportTokenSecret(): string
+    {
+        $secret = $_ENV['APP_KEY'] ?? getenv('APP_KEY');
+        if (!is_string($secret) || $secret === '') {
+            throw new \RuntimeException('APP_KEY must be configured.');
+        }
+
+        return $secret;
+    }
+}
+```
+
+Calling `startChunkedReport()` sends the HTML progress page and terminates the
+request, just like the existing `reportExport()` action. When omitted, parameters
+default to `[]`, format uses `getChunkedReportFormat()` (`xlsx` by default), and
+chunk size uses `getChunkedReportChunkSize()` (`500` by default). Pass only
+JSON-serialisable values in report parameters, using model IDs rather than objects.
+
+### Event-scoped URLs
+
+Progress and download URLs are generated automatically with
+`getModelManager()->compileURL('reportProgress', $params)` and
+`getModelManager()->compileURL('reportDownload', $params)`. For an event-scoped
+controller, add the shared routing context:
+
+```php
+protected function getChunkedReportUrlParams(): array
+{
+    return [
+        'id_event' => $this->getForeignModelFromRequest('events')->id,
+    ];
+}
+```
+
+These are routing parameters, not report constructor parameters. If a report needs
+the event ID, also include it in the parameters passed to `startChunkedReport()`.
+Both URL methods remain overridable for custom routing.
+
+### Existing single-export controllers
+
+Existing controllers can keep `reportExport()`, `getChunkedReportClass()`, and
+`getChunkedReportParams()` unchanged. The default action now delegates to
+`startChunkedReport()`. Controllers with explicit export actions do not need to
+implement the class or parameters hooks.
+
+Apply authorization to the start, progress, and download endpoints. The trait
+validates token signatures but does not bind jobs to a user or enforce report
+permissions; enforce ownership and report-specific access in your application.
+
 ## Problem Statement
 
 The current model generates an entire report in a **single synchronous HTTP request**:
