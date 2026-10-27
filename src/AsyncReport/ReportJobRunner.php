@@ -56,6 +56,10 @@ class ReportJobRunner
      */
     public function runChunk(ReportJobState $state): ReportJobState
     {
+        if ($state->isDone()) {
+            return $state;
+        }
+
         $this->store->initJob($state->jobId);
 
         try {
@@ -156,13 +160,19 @@ class ReportJobRunner
     {
         $allRows = $this->store->getAllRows($state->jobId);
 
-        $outputPath = $this->buildOutputPath($state);
-
         // Re-use the report's own writer pipeline; pre-load the accumulated
         // rows so that the writer does not call getData() / DataProvider again.
         $report->preloadData($allRows);
         $writer = $report->getWriter($state->format);
-        $writer->save($outputPath);
+        $outputPath = $this->buildOutputPath($state);
+        try {
+            $writer->save($outputPath);
+        } catch (Throwable $e) {
+            if (is_file($outputPath) && !unlink($outputPath)) {
+                throw new \RuntimeException("Cannot remove failed output file: {$outputPath}", 0, $e);
+            }
+            throw $e;
+        }
 
         $state->outputPath = $outputPath;
         $extension = $state->format === 'csv' ? 'csv' : 'xlsx';
@@ -180,10 +190,17 @@ class ReportJobRunner
     {
         $extension = $state->format === 'csv' ? '.csv' : '.xlsx';
         $dir = sys_get_temp_dir() . '/report_output';
-        if (!is_dir($dir) && !mkdir($dir, 0700, true) && !is_dir($dir)) {
+        if (!is_dir($dir) && !@mkdir($dir, 0700, true) && !is_dir($dir)) {
             throw new \RuntimeException("Cannot create output directory: {$dir}");
         }
 
-        return $dir . '/' . $state->jobId . $extension;
+        $path = $dir . '/' . $state->jobId . '_' . bin2hex(random_bytes(16)) . $extension;
+        $file = @fopen($path, 'x');
+        if ($file === false) {
+            throw new \RuntimeException("Cannot exclusively create output file: {$path}");
+        }
+        fclose($file);
+
+        return $path;
     }
 }
