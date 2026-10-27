@@ -8,6 +8,9 @@ composer require bytic/report-generator
 
 ## Concepts
 
+For multi-request exports, including multiple export actions in one controller,
+see the [chunked controller examples](chunked-report-generation.md#controller-examples).
+
 #### Perspectives
 
 Used to do different filters to run the same report with different data.

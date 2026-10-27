@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * ## Flow
  *
- * 1. User navigates to the `reportExport` action → HTML progress-bar page
+ * 1. An export action calls `startChunkedReport()` → HTML progress-bar page
  *    is returned.  The page initialises a continuation token and stores it
  *    in the JavaScript.
  *
@@ -40,14 +40,18 @@ use Symfony\Component\HttpFoundation\Response;
  * {
  *     use HasReportGeneratorControllerTrait;
  *
- *     protected function getChunkedReportClass(): string
+ *     public function exportOrders(): void
  *     {
- *         return MyReport::class;
+ *         $this->startChunkedReport(
+ *             OrdersReport::class,
+ *             ['year' => (int) $this->getRequest()->get('year')],
+ *             format: 'xlsx',
+ *         );
  *     }
  *
- *     protected function getChunkedReportParams(): array
+ *     public function exportCustomers(): void
  *     {
- *         return ['year' => (int) $this->getRequest()->get('year')];
+ *         $this->startChunkedReport(CustomersReport::class, ['active' => true], format: 'csv');
  *     }
  *
  *     protected function getChunkedReportTokenSecret(): string
@@ -79,11 +83,34 @@ trait HasReportGeneratorControllerTrait
      */
     public function reportExport(): void
     {
-        $state = ReportJobState::initial(
+        $this->startChunkedReport(
             $this->getChunkedReportClass(),
             $this->getChunkedReportParams(),
             $this->getChunkedReportFormat(),
             $this->getChunkedReportChunkSize(),
+        );
+    }
+
+    /**
+     * Start an export from any controller action and send its progress page.
+     *
+     * Authorize the request and validate parameters before calling this method.
+     * Parameters must contain only JSON-serialisable values.
+     * Omitted format and chunk size use the controller's default hooks.
+     *
+     * @param array<string, mixed> $params
+     */
+    protected function startChunkedReport(
+        string $reportClass,
+        array $params = [],
+        ?string $format = null,
+        ?int $chunkSize = null,
+    ): void {
+        $state = ReportJobState::initial(
+            $reportClass,
+            $params,
+            $format ?? $this->getChunkedReportFormat(),
+            $chunkSize ?? $this->getChunkedReportChunkSize(),
         );
 
         $token = ContinuationToken::encode($state, $this->getChunkedReportTokenSecret());
@@ -233,7 +260,7 @@ trait HasReportGeneratorControllerTrait
     /**
      * Return the fully-qualified class name of the report to generate.
      *
-     * This method MUST be implemented by the consuming controller.
+     * Required only when using the default reportExport() action.
      */
     protected function getChunkedReportClass(): string
     {
@@ -243,7 +270,7 @@ trait HasReportGeneratorControllerTrait
     }
 
     /**
-     * Return the parameters to pass to the report constructor.
+     * Return the report constructor parameters for the default reportExport() action.
      *
      * Must only contain JSON-serialisable primitive values (strings, ints,
      * floats, booleans) — no objects or resource handles.
