@@ -55,6 +55,15 @@ default to `[]`, format uses `getChunkedReportFormat()` (`xlsx` by default), and
 chunk size uses `getChunkedReportChunkSize()` (`500` by default). Pass only
 JSON-serialisable values in report parameters, using model IDs rather than objects.
 
+The progress page starts the download automatically when the report is ready and
+shows a **Download report** button to save it again, plus a **Back** button.
+A visible 15-second countdown starts when the browser download is triggered,
+then returns to the referring page (or browser history, with `/` as the fallback
+when neither is available). Download errors leave the page open without starting
+the countdown. The file is fetched into a browser Blob so the Download button
+still works after the server cleans up the report; this uses browser storage or
+memory for the completed file until the page is left.
+
 ### Event-scoped URLs
 
 Progress and download URLs are generated automatically with

@@ -29,9 +29,10 @@ use Symfony\Component\HttpFoundation\Response;
  *    processes one chunk and returns JSON `{done, token, processed, total,
  *    percent}`.
  *
- * 3. When `done === true` the JS redirects to `reportDownload` with the
- *    final token.  The server streams the generated file and then removes
- *    the temporary directory.
+ * 3. When `done === true` the JS fetches `reportDownload` with the final
+ *    token and starts a browser download. The page keeps a local copy for
+ *    its Download button and returns to the original page after 15 seconds.
+ *    The server removes the temporary directory after serving the file.
  *
  * ## How to use
  *
@@ -145,7 +146,7 @@ trait HasReportGeneratorControllerTrait
      * }
      * ```
      *
-     * When `done` is `true` the caller should redirect to the download action.
+     * When `done` is `true` the caller can fetch the file from the download action.
      */
     public function reportProgress(): void
     {

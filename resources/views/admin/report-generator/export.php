@@ -91,6 +91,27 @@ declare(strict_types=1);
             min-height: 1.25em;
         }
 
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .button {
+            border: 0;
+            border-radius: 6px;
+            background: #4c84ff;
+            color: #fff;
+            cursor: pointer;
+            font: inherit;
+            padding: 10px 18px;
+            text-decoration: none;
+        }
+
+        .button--secondary { background: #e9ecef; color: #333; }
+        .button[hidden] { display: none; }
+        .return-countdown { margin-top: 16px; font-size: .875rem; color: #666; }
+
         /* ── Error state ──────────────────────────────────── */
         .alert-error {
             background: #fff0f0;
@@ -116,7 +137,12 @@ declare(strict_types=1);
     </div>
     <p class="progress-label" id="rg-status">Starting&hellip;</p>
 
-    <div class="alert-error" id="rg-error"></div>
+    <div class="actions">
+        <a class="button" id="rg-download" hidden>Download report</a>
+        <button class="button button--secondary" id="rg-back" type="button">Back</button>
+    </div>
+    <p class="return-countdown" id="rg-countdown" role="status" hidden></p>
+    <div class="alert-error" id="rg-error" role="alert"></div>
 </div>
 
 <script>
@@ -126,12 +152,89 @@ declare(strict_types=1);
         const PROGRESS_URL  = <?= json_encode($progressUrl, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
         const DOWNLOAD_URL  = <?= json_encode($downloadUrl, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
         const KNOWN_TOTAL   = <?= json_encode($totalRows) ?>;
+        const DEFAULT_FILENAME = <?= json_encode('report.' . $state->format, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 
         let currentToken    = <?= json_encode($token, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 
         const fillEl   = document.getElementById('rg-progress-fill');
         const statusEl = document.getElementById('rg-status');
         const errorEl  = document.getElementById('rg-error');
+        const downloadEl = document.getElementById('rg-download');
+        const countdownEl = document.getElementById('rg-countdown');
+        let downloadObjectUrl = null;
+        let returnTimer = null;
+
+        function goBack() {
+            if (document.referrer) {
+                const originalUrl = new URL(document.referrer);
+                if (originalUrl.origin === window.location.origin) {
+                    window.location.href = originalUrl.href;
+                    return;
+                }
+            }
+
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        document.getElementById('rg-back').addEventListener('click', goBack);
+        window.addEventListener('pagehide', function () {
+            clearInterval(returnTimer);
+            if (downloadObjectUrl !== null) {
+                URL.revokeObjectURL(downloadObjectUrl);
+            }
+        });
+
+        function startReturnCountdown() {
+            const returnAt = Date.now() + 15000;
+            countdownEl.hidden = false;
+
+            function updateCountdown() {
+                const seconds = Math.max(0, Math.ceil((returnAt - Date.now()) / 1000));
+                countdownEl.textContent = 'Returning to the original page in ' + seconds + ' seconds\u2026';
+                if (seconds === 0) {
+                    clearInterval(returnTimer);
+                    goBack();
+                }
+            }
+
+            updateCountdown();
+            returnTimer = setInterval(updateCountdown, 1000);
+        }
+
+        async function startDownload() {
+            try {
+                const url = DOWNLOAD_URL
+                    + (DOWNLOAD_URL.includes('?') ? '&' : '?')
+                    + '_report_token=' + encodeURIComponent(currentToken);
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Download failed: server returned HTTP ' + response.status);
+                }
+
+                const disposition = response.headers.get('Content-Disposition') || '';
+                const encodedFilename = disposition.match(/filename\*=utf-8''([^;]+)/i);
+                const filename = disposition.match(/filename="((?:\\.|[^"])*)"|filename=([^;\s]+)/i);
+                downloadEl.download = encodedFilename
+                    ? decodeURIComponent(encodedFilename[1])
+                    : (filename ? (filename[1] || filename[2]).replace(/\\(.)/g, '$1') : DEFAULT_FILENAME);
+
+                // Keep a local copy: the server removes the report after this request.
+                downloadObjectUrl = URL.createObjectURL(await response.blob());
+                downloadEl.href = downloadObjectUrl;
+                downloadEl.hidden = false;
+                document.querySelector('.card__title').textContent = 'Your report is ready';
+                document.title = 'Report ready';
+                setStatus('Your download has started. Use Download report if it does not start automatically.');
+                downloadEl.click();
+                startReturnCountdown();
+            } catch (err) {
+                showError(err.message || 'Download failed');
+            }
+        }
 
         function setProgress(percent) {
             if (percent !== null) {
@@ -191,12 +294,7 @@ declare(strict_types=1);
                 setStatus('Done! Your download will start shortly\u2026');
 
                 // Small pause so the user sees 100 %
-                setTimeout(function () {
-                    const url = DOWNLOAD_URL
-                        + (DOWNLOAD_URL.includes('?') ? '&' : '?')
-                        + '_report_token=' + encodeURIComponent(currentToken);
-                    window.location.href = url;
-                }, 600);
+                setTimeout(startDownload, 600);
             } else {
                 // Schedule the next chunk with a small delay to stay responsive
                 setTimeout(processChunk, 150);
