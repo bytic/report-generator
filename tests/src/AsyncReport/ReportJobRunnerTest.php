@@ -105,6 +105,10 @@ class ReportJobRunnerTest extends TestCase
             'attachment',
             (string) $response->headers->get('Content-Disposition'),
         );
+        self::assertStringContainsString(
+            'Total Report.xlsx',
+            (string) $response->headers->get('Content-Disposition'),
+        );
     }
 
     // -------------------------------------------------------------------------

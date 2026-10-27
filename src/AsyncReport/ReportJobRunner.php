@@ -85,7 +85,7 @@ class ReportJobRunner
         $response = new BinaryFileResponse($state->outputPath);
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            basename($state->outputPath),
+            $state->outputFilename ?? basename($state->outputPath),
         );
 
         return $response;
@@ -165,6 +165,8 @@ class ReportJobRunner
         $writer->save($outputPath);
 
         $state->outputPath = $outputPath;
+        $extension = $state->format === 'csv' ? 'csv' : 'xlsx';
+        $state->outputFilename = $report->getDefinition()->getFileName() . '.' . $extension;
         $state->processedRows = count($allRows);
         if ($state->totalRows === -1) {
             $state->totalRows = $state->processedRows;

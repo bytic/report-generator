@@ -50,6 +50,9 @@ class ReportJobState
     /** Absolute path to the final output file (set when status = done). */
     public ?string $outputPath;
 
+    /** Download filename generated from the report definition and format. */
+    public ?string $outputFilename;
+
     /** Human-readable error message (set when status = failed). */
     public ?string $errorMessage;
 
@@ -78,6 +81,7 @@ class ReportJobState
         $state->totalRows = -1;
         $state->processedRows = 0;
         $state->outputPath = null;
+        $state->outputFilename = null;
         $state->errorMessage = null;
 
         return $state;
@@ -100,6 +104,7 @@ class ReportJobState
             'totalRows' => $this->totalRows,
             'processedRows' => $this->processedRows,
             'outputPath' => $this->outputPath,
+            'outputFilename' => $this->outputFilename,
             'errorMessage' => $this->errorMessage,
         ];
     }
@@ -117,6 +122,7 @@ class ReportJobState
         $state->totalRows = (int) ($data['totalRows'] ?? -1);
         $state->processedRows = (int) ($data['processedRows'] ?? 0);
         $state->outputPath = isset($data['outputPath']) ? (string) $data['outputPath'] : null;
+        $state->outputFilename = isset($data['outputFilename']) ? (string) $data['outputFilename'] : null;
         $state->errorMessage = isset($data['errorMessage']) ? (string) $data['errorMessage'] : null;
 
         return $state;
