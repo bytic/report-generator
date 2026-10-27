@@ -55,14 +55,9 @@ use Symfony\Component\HttpFoundation\Response;
  *         return $_ENV['APP_KEY'] ?? getenv('APP_KEY');
  *     }
  *
- *     protected function getChunkedReportProgressUrl(): string
+ *     protected function getChunkedReportUrlParams(): array
  *     {
- *         return '/admin/my-reports/reportProgress';
- *     }
- *
- *     protected function getChunkedReportDownloadUrl(): string
- *     {
- *         return '/admin/my-reports/reportDownload';
+ *         return ['id_event' => $this->getForeignModelFromRequest('events')->id];
  *     }
  * }
  * ```
@@ -292,25 +287,31 @@ trait HasReportGeneratorControllerTrait
     /**
      * Return the URL of the `reportProgress` AJAX endpoint.
      *
-     * This method MUST be implemented by the consuming controller.
+     * Override when the endpoint does not use the model manager's URL scheme.
      */
     protected function getChunkedReportProgressUrl(): string
     {
-        throw new \RuntimeException(
-            'Implement ' . static::class . '::getChunkedReportProgressUrl().'
-        );
+        return $this->getModelManager()->compileURL('reportProgress', $this->getChunkedReportUrlParams());
     }
 
     /**
      * Return the URL of the `reportDownload` endpoint.
      *
-     * This method MUST be implemented by the consuming controller.
+     * Override when the endpoint does not use the model manager's URL scheme.
      */
     protected function getChunkedReportDownloadUrl(): string
     {
-        throw new \RuntimeException(
-            'Implement ' . static::class . '::getChunkedReportDownloadUrl().'
-        );
+        return $this->getModelManager()->compileURL('reportDownload', $this->getChunkedReportUrlParams());
+    }
+
+    /**
+     * Return routing context shared by the progress and download endpoints.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getChunkedReportUrlParams(): array
+    {
+        return [];
     }
 
     // =========================================================================
