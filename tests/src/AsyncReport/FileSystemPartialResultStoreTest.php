@@ -106,6 +106,20 @@ class FileSystemPartialResultStoreTest extends TestCase
         self::assertSame([], $all);
     }
 
+    public function test_iterate_rows_loads_chunks_lazily_and_in_order(): void
+    {
+        $jobId = 'test-job-lazy';
+        $this->store->appendChunk($jobId, 10, [(object) ['order' => 10]]);
+        $this->store->appendChunk($jobId, 2, [(object) ['order' => 2]]);
+
+        $rows = $this->store->iterateRows($jobId);
+        self::assertSame(2, $rows->current()->order);
+
+        file_put_contents($this->tmpDir . '/' . $jobId . '/chunk_10.dat', base64_encode(serialize('corrupt')));
+        $this->expectException(\RuntimeException::class);
+        $rows->next();
+    }
+
     public function test_cleanup_removes_directory(): void
     {
         $jobId = 'test-job-cleanup';
