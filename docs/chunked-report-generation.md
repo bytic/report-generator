@@ -103,6 +103,35 @@ Apply authorization to the start, progress, and download endpoints. The trait
 validates token signatures but does not bind jobs to a user or enforce report
 permissions; enforce ownership and report-specific access in your application.
 
+## Finalization limits
+
+The filesystem store reads rows one chunk at a time during finalization. The
+existing PhpSpreadsheet writer still builds the entire workbook in memory and
+saves it in a single request; chunking does not bound the workbook's memory or
+execution time. A non-paginated provider also fetches all rows in one request.
+
+For finalization, the runner raises PHP's memory limit to at least 512 MB and
+the execution time limit to at least 120 seconds when runtime changes are
+allowed. Higher or unlimited limits are not lowered. The previous limits are
+restored afterward. The limits are per request, so concurrent exports can
+multiply the server's memory usage. Web server, proxy and PHP-FPM timeouts may
+also need adjustment. Large enough workbooks can still exceed these limits.
+
+To select different limits, override the controller's runner hook:
+
+```php
+protected function getChunkedReportRunner(): ReportJobRunner
+{
+    return new ReportJobRunner($this->getChunkedReportStore(), '256M', 90);
+}
+```
+
+Import `ByTIC\ReportGenerator\AsyncReport\ReportJobRunner` in the controller.
+Custom stores can implement `IterablePartialResultStoreInterface` to avoid
+loading all stored rows at once; other stores retain their existing behavior.
+Reports overriding `preloadData()` and filesystem store subclasses overriding
+only `getAllRows()` also retain their array-based behavior.
+
 ## Problem Statement
 
 The current model generates an entire report in a **single synchronous HTTP request**:

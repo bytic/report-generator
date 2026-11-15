@@ -7,6 +7,11 @@ namespace ByTIC\ReportGenerator\Tests\AsyncReport;
 use ByTIC\ReportGenerator\AsyncReport\ReportJobRunner;
 use ByTIC\ReportGenerator\AsyncReport\ReportJobState;
 use ByTIC\ReportGenerator\AsyncReport\Storage\FileSystemPartialResultStore;
+use ByTIC\ReportGenerator\Report\AbstractReport;
+use ByTIC\ReportGenerator\Report\DataProvider\AbstractDataProvider;
+use ByTIC\ReportGenerator\Report\DataProvider\ChunkedDataProviderInterface;
+use ByTIC\ReportGenerator\Report\ReportInterface;
+use ByTIC\ReportGenerator\Report\Writer\Xlsx;
 use ByTIC\ReportGenerator\Tests\Fixtures\BasicReport\Report;
 use PHPUnit\Framework\TestCase;
 
@@ -212,6 +217,131 @@ PHP;
         self::assertFalse($this->store->hasJob($state->jobId));
     }
 
+    public function test_large_chunked_xlsx_uses_iterable_rows_and_temporary_limits(): void
+    {
+        $store = new class($this->tmpDir) extends FileSystemPartialResultStore {
+            public function getAllRows(string $jobId): array
+            {
+                throw new \RuntimeException('Rows must be read incrementally.');
+            }
+
+            public function iterateRows(string $jobId): iterable
+            {
+                yield from parent::iterateRows($jobId);
+            }
+        };
+        $runner = new ReportJobRunner($store);
+        $memory = ini_get('memory_limit');
+        $time = ini_get('max_execution_time');
+        try {
+            ini_set('memory_limit', '128M');
+            ini_set('max_execution_time', '30');
+            $state = ReportJobState::initial(LargeChunkedReport::class, [], 'xlsx', 500);
+            do {
+                $state = $runner->runChunk($state);
+                self::assertFalse($state->isFailed(), (string) $state->errorMessage);
+                self::assertSame('128M', ini_get('memory_limit'));
+                self::assertSame('30', ini_get('max_execution_time'));
+            } while (!$state->isDone());
+
+            $this->outputPaths[] = $state->outputPath;
+            self::assertSame(3000, $state->processedRows);
+            self::assertSame(['512M', '120'], LimitsRecordingXlsx::$limits);
+            self::assertFileExists($state->outputPath);
+            self::assertGreaterThan(1000, filesize($state->outputPath));
+            $archive = new \PharData($state->outputPath);
+            $xml = simplexml_load_string($archive['xl/worksheets/sheet1.xml']->getContent());
+            self::assertCount(3001, $xml->sheetData->row);
+            self::assertSame('0', (string) $xml->sheetData->row[1]->c[0]->v);
+            self::assertSame('74999', (string) $xml->sheetData->row[3000]->c[24]->v);
+        } finally {
+            ini_set('memory_limit', $memory);
+            ini_set('max_execution_time', $time);
+        }
+    }
+
+    public function test_finalization_does_not_lower_higher_limits(): void
+    {
+        $memory = ini_get('memory_limit');
+        $time = ini_get('max_execution_time');
+        try {
+            ini_set('memory_limit', '1G');
+            ini_set('max_execution_time', '180');
+            $state = ReportJobState::initial(LargeChunkedReport::class, [], 'xlsx', 3000);
+            $state = $this->runner->runChunk($state);
+
+            self::assertTrue($state->isDone(), (string) $state->errorMessage);
+            $this->outputPaths[] = $state->outputPath;
+            self::assertSame(['1G', '180'], LimitsRecordingXlsx::$limits);
+        } finally {
+            ini_set('memory_limit', $memory);
+            ini_set('max_execution_time', $time);
+        }
+    }
+
+    public function test_limits_are_restored_after_finalization_failure(): void
+    {
+        $memory = ini_get('memory_limit');
+        $time = ini_get('max_execution_time');
+        try {
+            ini_set('memory_limit', '128M');
+            ini_set('max_execution_time', '30');
+            $state = ReportJobState::initial(FailingChunkedReport::class, [], 'xlsx', 3000);
+            $state = $this->runner->runChunk($state);
+
+            self::assertTrue($state->isFailed());
+            self::assertSame('Writer failed', $state->errorMessage);
+            self::assertSame('128M', ini_get('memory_limit'));
+            self::assertSame('30', ini_get('max_execution_time'));
+        } finally {
+            ini_set('memory_limit', $memory);
+            ini_set('max_execution_time', $time);
+        }
+    }
+
+    public function test_custom_preload_data_is_preserved(): void
+    {
+        CustomPreloadReport::$preloaded = false;
+        $state = ReportJobState::initial(CustomPreloadReport::class, [], 'xlsx', 3000);
+        $state = $this->runner->runChunk($state);
+        self::assertTrue($state->isDone(), (string) $state->errorMessage);
+        $this->outputPaths[] = $state->outputPath;
+        self::assertTrue(CustomPreloadReport::$preloaded);
+    }
+
+    public function test_store_subclass_get_all_rows_override_is_preserved(): void
+    {
+        $store = new class($this->tmpDir) extends FileSystemPartialResultStore {
+            public bool $called = false;
+
+            public function getAllRows(string $jobId): array
+            {
+                $this->called = true;
+                return parent::getAllRows($jobId);
+            }
+        };
+        $runner = new ReportJobRunner($store);
+        $state = $runner->runChunk(ReportJobState::initial(Report::class, [], 'csv'));
+        self::assertTrue($state->isDone(), (string) $state->errorMessage);
+        $this->outputPaths[] = $state->outputPath;
+        self::assertTrue($store->called);
+    }
+
+    public function test_invalid_time_limit_restores_an_already_raised_memory_limit(): void
+    {
+        $memory = ini_get('memory_limit');
+        try {
+            ini_set('memory_limit', '128M');
+            $runner = new ReportJobRunner($this->store, '512M', 0);
+            $state = $runner->runChunk(ReportJobState::initial(Report::class, [], 'csv'));
+            self::assertTrue($state->isFailed());
+            self::assertSame('The finalization time limit must be positive.', $state->errorMessage);
+            self::assertSame('128M', ini_get('memory_limit'));
+        } finally {
+            ini_set('memory_limit', $memory);
+        }
+    }
+
     // -------------------------------------------------------------------------
 
     /** Skip the test if bytic/collections is not installed. */
@@ -239,5 +369,93 @@ PHP;
             is_dir($path) ? $this->removeTempDir($path) : @unlink($path);
         }
         @rmdir($dir);
+    }
+}
+
+class LargeChunkedReport extends AbstractReport implements ReportInterface
+{
+    protected function define(): void
+    {
+        $this->getDefinition()->setTitle('Large report');
+        for ($i = 0; $i < 25; ++$i) {
+            $this->getDefinition()->addColumnSimple('column' . $i);
+        }
+    }
+
+    protected function getDataProviderClass(): string
+    {
+        return LargeChunkedProvider::class;
+    }
+
+    protected function generateWriter($type)
+    {
+        return new LimitsRecordingXlsx($this);
+    }
+}
+
+class LargeChunkedProvider extends AbstractDataProvider implements ChunkedDataProviderInterface
+{
+    private int $offset = 0;
+    private int $limit = 0;
+
+    public function setOffset(int $offset): void
+    {
+        $this->offset = $offset;
+    }
+
+    public function setLimit(int $limit): void
+    {
+        $this->limit = $limit;
+    }
+
+    public function getTotalCount(): int
+    {
+        return 3000;
+    }
+
+    protected function generateData(): \Generator
+    {
+        for ($i = $this->offset; $i < min(3000, $this->offset + $this->limit); ++$i) {
+            $values = [];
+            for ($column = 0; $column < 25; ++$column) {
+                $values['column' . $column] = $i * 25 + $column;
+            }
+            yield $this->newDataRow($values);
+        }
+    }
+}
+
+class LimitsRecordingXlsx extends Xlsx
+{
+    public static array $limits = [];
+
+    public function save($name)
+    {
+        self::$limits = [ini_get('memory_limit'), ini_get('max_execution_time')];
+        parent::save($name);
+    }
+}
+
+class FailingChunkedReport extends LargeChunkedReport
+{
+    protected function generateWriter($type)
+    {
+        return new class($this) extends Xlsx {
+            public function save($name)
+            {
+                throw new \RuntimeException('Writer failed');
+            }
+        };
+    }
+}
+
+class CustomPreloadReport extends LargeChunkedReport
+{
+    public static bool $preloaded = false;
+
+    public function preloadData(array $rows): void
+    {
+        self::$preloaded = true;
+        parent::preloadData($rows);
     }
 }

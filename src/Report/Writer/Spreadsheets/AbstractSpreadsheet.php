@@ -51,6 +51,18 @@ abstract class AbstractSpreadsheet extends AbstractWriter implements WriterInter
     }
 
     /**
+     * Release the in-memory workbook after a one-shot export.
+     */
+    public function releaseReportJobResources(): void
+    {
+        if ($this->spreadsheet !== null) {
+            $this->spreadsheet->disconnectWorksheets();
+        }
+        $this->writer = null;
+        $this->spreadsheet = null;
+    }
+
+    /**
      * @return IWriter|null
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception

@@ -52,6 +52,16 @@ abstract class AbstractReport
      */
     public function preloadData(array $rows): void
     {
+        $this->preloadIterableData($rows);
+    }
+
+    /**
+     * Pre-load rows without materializing the entire result set.
+     *
+     * @param iterable<\ByTIC\ReportGenerator\Report\DataProvider\DataRows\DataRow> $rows
+     */
+    public function preloadIterableData(iterable $rows): void
+    {
         $this->validateDefinition();
         $this->data = (static function () use ($rows): \Generator {
             yield from $rows;

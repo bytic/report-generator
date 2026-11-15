@@ -11,15 +11,14 @@ use RuntimeException;
  * Stores chunked report rows in the local filesystem.
  *
  * Each chunk is written to a separate file inside a job-specific temporary
- * directory.  On finalisation the caller reads all chunks back via
- * `getAllRows()`.
+ * directory. On finalisation the caller can iterate over one chunk at a time.
  *
  * Directory layout:
  *   {baseDir}/{jobId}/chunk_0.dat
  *   {baseDir}/{jobId}/chunk_1.dat
  *   ...
  */
-class FileSystemPartialResultStore implements PartialResultStoreInterface
+class FileSystemPartialResultStore implements IterablePartialResultStoreInterface
 {
     private readonly string $baseDir;
 
@@ -60,14 +59,19 @@ class FileSystemPartialResultStore implements PartialResultStoreInterface
      */
     public function getAllRows(string $jobId): array
     {
+        return iterator_to_array($this->iterateRows($jobId), false);
+    }
+
+    public function iterateRows(string $jobId): iterable
+    {
         $dir = $this->jobDir($jobId);
         if (!is_dir($dir)) {
-            return [];
+            return;
         }
 
         $files = glob($dir . '/chunk_*.dat');
-        if ($files === false || $files === []) {
-            return [];
+        if ($files === false) {
+            throw new RuntimeException("Cannot list chunk files: {$dir}");
         }
 
         // Sort by chunk index (chunk_0, chunk_1, …)
@@ -75,7 +79,6 @@ class FileSystemPartialResultStore implements PartialResultStoreInterface
             return self::chunkIndexFromPath($a) <=> self::chunkIndexFromPath($b);
         });
 
-        $all = [];
         foreach ($files as $file) {
             $content = file_get_contents($file);
             if ($content === false) {
@@ -83,6 +86,7 @@ class FileSystemPartialResultStore implements PartialResultStoreInterface
             }
             /** @var mixed $rows */
             $rows = unserialize(base64_decode($content));
+            unset($content);
             if (!is_array($rows)) {
                 throw new RuntimeException("Corrupt chunk file (expected array): {$file}");
             }
@@ -90,11 +94,9 @@ class FileSystemPartialResultStore implements PartialResultStoreInterface
                 if (!is_object($row)) {
                     throw new RuntimeException("Corrupt chunk file (expected object rows): {$file}");
                 }
-                $all[] = $row;
+                yield $row;
             }
         }
-
-        return $all;
     }
 
     public function hasJob(string $jobId): bool
